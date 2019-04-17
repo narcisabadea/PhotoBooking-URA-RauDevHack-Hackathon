@@ -52,10 +52,64 @@ export default {
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {
-    // this.$store.dispatch('getUserDetails')
+    // - DATABASE
+
+    // read from firebase
     firebase.database().ref('test').on('value', snapshot => {
       console.log(snapshot.val())
     })
+
+    // get authenticated user ID
+    // var userId = firebase.auth().currentUser.uid;
+
+    // add with specific id in database
+    // firebase.database().ref('test/' + specificID).set({
+    //   username: name
+    // })
+
+    // update value in database
+    // firebase.database().ref('way to value').update({ variable: 'newValue'})
+
+    // - AUTEHNTICATION
+
+    // create new user withoud any data
+    // firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
+    //   var errorCode = error.code
+    //   var errorMessage = error.message
+    // })
+
+    // create user with signUp form who have more data
+    // firebase.auth().createUserWithEmailAndPassword(email, password)
+    //   .then(user => {
+    //     firebase.database().ref('Users/' + firebase.auth().currentUser.uid).set({
+    //       Name: 'name',
+    //       Phone: 'phone',
+    //       Email: 'email'
+    //     })
+    //     }
+    //   )
+    //   .catch(
+    //     error => {
+    //       window.alert(error)
+    //     }
+    //   )
+
+    // verify if user still logged in
+    // firebase.auth().onAuthStateChanged(user => {
+    //   doSomethingIfUserStillExist
+    // })
+
+    // sign in function
+    // firebase.auth().signInWithEmailAndPassword(email, password).catch(error => {
+    //   var errorCode = error.code
+    //   var errorMessage = error.message
+    // })
+
+    //sign out function
+    // firebase.auth().signOut().then(() => {
+    //   }).catch(error => {
+    // })
+
   }
 }
 </script>
