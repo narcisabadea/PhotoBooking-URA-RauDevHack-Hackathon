@@ -19,6 +19,7 @@
 
 <script>
 import Home from './components/Home'
+import * as firebase from "firebase";
 export default {
   name: 'App',
   components: {
@@ -52,6 +53,9 @@ export default {
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {
     // this.$store.dispatch('getUserDetails')
+    firebase.database().ref('test').on('value', snapshot => {
+      console.log(snapshot.val())
+    })
   }
 }
 </script>
