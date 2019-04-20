@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+        Test
       </v-flex>
 
     </v-layout>
@@ -16,6 +16,7 @@
   export default {
     data: () => ({
       //
+      test: 'test'
     })
   }
 </script>

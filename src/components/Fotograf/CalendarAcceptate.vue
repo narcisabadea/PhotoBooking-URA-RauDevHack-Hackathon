@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+        calendar acceptate fotograf
       </v-flex>
 
     </v-layout>

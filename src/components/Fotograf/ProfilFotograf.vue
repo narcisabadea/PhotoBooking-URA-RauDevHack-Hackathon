@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+        Profil fotograf
       </v-flex>
 
     </v-layout>
