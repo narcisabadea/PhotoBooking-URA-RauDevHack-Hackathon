@@ -13,7 +13,8 @@ export default new Vuex.Store({
     usersDetails: null,
     photographersDetails: null,
     portofoliosDetails: null,
-    bookingsDetails: null
+    bookingsDetails: null,
+    rezervari: 'pending'
   },
 // helps you modify 'state' data
   mutations: {
@@ -29,11 +30,12 @@ export default new Vuex.Store({
     setBookingsDetails(state, payload) {
       state.bookingsDetails = payload
     }
+  },
+   
     // example: payload => data that come from actions
     //   setUserDetails(state, payload) {
     //     state.userDetails = payload
     //   }
-  },
 // functions that are called in other components in order to modify data from state
   actions: {
     readUsers({commit}) {
@@ -60,14 +62,33 @@ export default new Vuex.Store({
       })
     },
     readBookings({commit}) {
-      firebase.database().ref('booking').on('value', snapshot => {
+      firebase.database().ref('rezervari').on('value', snapshot => {
         commit('setBookingsDetails', snapshot.val())
       })
-    }
-    //   example: {commit} => sends data to 'functionName' from mutations in order to modify data in state and send as 2nd parammeter the value
-    //   getUserDetails({ commit }) {
-    //     commit('setUserDetails', JSON.parse(localStorage.getItem('details')))
-    //   }
+    },
+    readRequests ({commit}) {
+      commit('setRequests', [])
+      var altArray = []
+      var bookingsDetails = {}
+      return firebase.database().ref('rezervari')
+        .onSnapshot(snapshot => {
+          snapshot.forEach(obj => {
+            bookingsDetails[obj.id] = {
+              dataStart: obj.data().dataStart,
+              dataEnd: obj.data().dataEnd,
+              status: obj.data().status,
+              userId: obj.data().userId
+            }
+          })
+          altArray['rezervari'] = bookingsDetails
+          commit('setRequests', bookingsDetails)
+        })
+      },
+      approveRequest (payload) {
+        firebase.database().ref('rezervari/' + payload.itemId).update({
+          status: 'approved'
+        })
+      }
   },
 // helps you get data from this document wherever you need it
   getters: {
@@ -75,6 +96,7 @@ export default new Vuex.Store({
     usersDetails: state => state.usersDetails,
     photographersDetails: state => state.photographersDetails,
     portofoliosDetails: state => state.portofoliosDetails,
-    bookingsDetails: state => state.bookingsDetails
+    bookingsDetails: state => state.bookingsDetails,
+    rezervari: state => state.rezervari,
   }
 })
