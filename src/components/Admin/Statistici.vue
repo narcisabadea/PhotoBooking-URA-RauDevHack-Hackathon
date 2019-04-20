@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+        statistici admin
       </v-flex>
 
     </v-layout>

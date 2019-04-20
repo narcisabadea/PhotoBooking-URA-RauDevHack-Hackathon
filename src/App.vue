@@ -12,7 +12,7 @@
     <!-- continutul paginii  -->
     <v-content>
       <!-- componenta se va modifica de fiecare data cand se intra pe alta ruta din 'router' -->
-      <Home/>
+       <router-view></router-view>
     </v-content>
   </v-app>
 </template>

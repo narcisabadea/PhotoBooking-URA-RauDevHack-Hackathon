@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+       liste useri si fotografi
       </v-flex>
 
     </v-layout>

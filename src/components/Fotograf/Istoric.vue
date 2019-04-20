@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+        Istoric fotograf
       </v-flex>
 
     </v-layout>
