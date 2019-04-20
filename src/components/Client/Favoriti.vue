@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+       favoriti client
       </v-flex>
 
     </v-layout>

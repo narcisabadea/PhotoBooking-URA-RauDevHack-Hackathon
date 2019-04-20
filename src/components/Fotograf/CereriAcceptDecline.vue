@@ -5,7 +5,7 @@
       wrap
     >
       <v-flex xs12>
-        Home
+        cereri acceptate/declined fotograf
       </v-flex>
 
     </v-layout>
