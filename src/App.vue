@@ -68,7 +68,7 @@
     <!-- continutul paginii  -->
     <v-content>
       <!-- componenta se va modifica de fiecare data cand se intra pe alta ruta din 'router' -->
-       <router-view></router-view>
+      <router-view></router-view>
     </v-content>
 
      <v-dialog v-model="dialogLogIn" class="dialog">
@@ -231,7 +231,6 @@
     </v-dialog>
   </v-app>
 </template>
-
 <script>
 /* eslint-disable no-console */
 /* eslint-disable */
@@ -411,19 +410,15 @@ export default {
   created() {
     this.rules = formRules
     this.$store.dispatch('readUsers')
-    this.$store.dispatch('readPhotographers')
-    this.$store.dispatch('readPortofolios')
-    this.$store.dispatch('readBookings')
-    // this.$store.dispatch('getUserDetails')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {
     // - DATABASE
 
     // read from firebase
-    // firebase.database().ref('test').on('value', snapshot => {
-    //   console.log(snapshot.val())
-    // })
+    firebase.database().ref('test').on('value', snapshot => {
+      console.log(snapshot.val())
+    })
 
     // get authenticated user ID
     // var userId = firebase.auth().currentUser.uid;
