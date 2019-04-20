@@ -8,7 +8,11 @@ import App from './App.vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  theme: {
+    primary: '#f7971e'
+  }
+})
 Vue.use(Vuex)
 Vue.config.productionTip = false
 
