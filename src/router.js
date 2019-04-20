@@ -11,6 +11,8 @@ import ProfilClient from '@/components/Client/ProfilClient'
 import Favoriti from '@/components/Client/Favoriti'
 import ListeUseriFotografi from '@/components/Admin/ListeUseriFotografi'
 import Statistici from '@/components/Admin/Statistici'
+import CereriTrimise from '@/components/Client/CereriTrimise'
+
 
 Vue.use(Router)
 
@@ -61,6 +63,11 @@ export default new Router({
         path: '/ListeUseriFotografi',
         name: 'ListeUseriFotografi',
         component: ListeUseriFotografi
+      },
+      {
+        path: '/CereriTrimise',
+        name: 'CereriTrimise',
+        component: CereriTrimise
       },
       {
         path: '/Statistici',

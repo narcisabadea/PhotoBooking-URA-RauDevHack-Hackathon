@@ -48,6 +48,10 @@ export default {
   },
 // LIFECYCLE: functie ce se apeleaza inainte de construirea DOM-ului
   created() {
+    this.$store.dispatch('readUsers')
+    this.$store.dispatch('readPhotographers')
+    this.$store.dispatch('readPortofolios')
+    this.$store.dispatch('readBookings')
     // this.$store.dispatch('getUserDetails')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
@@ -55,9 +59,9 @@ export default {
     // - DATABASE
 
     // read from firebase
-    firebase.database().ref('test').on('value', snapshot => {
-      console.log(snapshot.val())
-    })
+    // firebase.database().ref('test').on('value', snapshot => {
+    //   console.log(snapshot.val())
+    // })
 
     // get authenticated user ID
     // var userId = firebase.auth().currentUser.uid;
