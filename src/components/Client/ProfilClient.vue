@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout align-center justify-space-around row fill-height>
-      <v-flex xs8>
+      <v-flex xs12>
         <v-card>
           <v-card-text>
             <v-text-field
@@ -10,7 +10,7 @@
               label="Nume"
               id="nume"
               :v-model = "name"
-              :value = "usersDetails[0].nume"
+              :value = "thisUserDetails.nume"
               :disabled="disabledDetails"
             ></v-text-field>
             <v-spacer></v-spacer>
@@ -19,7 +19,7 @@
               name="prenume"
               label="Prenume"
               id="prenume"
-              :value = "usersDetails[0].prenume"
+              :value = "thisUserDetails.prenume"
               :disabled="disabledDetails"
             ></v-text-field>
             <v-autocomplete
@@ -27,7 +27,7 @@
               name="sex"
               id="sex"
               label="Sex"
-              :value = "usersDetails[0].sex"
+              :value = "thisUserDetails.sex"
               :disabled="disabledDetails"
               :items="gender"
             ></v-autocomplete>
@@ -36,7 +36,7 @@
               :close-on-content-click="false"
               v-model="menu"
               :nudge-right="40"
-              :return-value.sync="usersDetails[0].dataNastere"
+              :return-value.sync="thisUserDetails.dataNastere"
               lazy
               transition="scale-transition"
               offset-y
@@ -46,10 +46,10 @@
             >
               <v-text-field
                 slot="activator"
-                v-model="usersDetails[0].dataNastere"
+                v-model="thisUserDetails.dataNastere"
                 label="Data nasterii"
                 prepend-icon="event"
-                :value = "usersDetails[0].dataNastere"
+                :value = "thisUserDetails.dataNastere"
                 id="birthday"
                 readonly
                 :disabled="disabledDetails"
@@ -93,7 +93,7 @@
                     prepend-icon="email"
                     name="oldEmail"
                     id="oldEmail"
-                    :value = "usersDetails[0].email"
+                    :value = "thisUserDetails.email"
                     :disabled="disabledDetails"
                   ></v-text-field>
                   <v-text-field
@@ -254,8 +254,18 @@
       }
     },
     computed: {
+      user () {
+        return this.$store.getters.user
+      },
       usersDetails () {
-        return this.$store.getters.usersDetails
+        return this.$store.getters.photographersDetails
+      },
+      thisUserDetails () {
+        this.usersDetails.forEach(element => {
+          if (element.idFotograf === this.user.id) {
+            return element
+          }
+        });
       },
       comparePasswords () {
         return this.password2 !== this.passwordConfirm ? 'Parolele nu coincid' : ''
@@ -302,7 +312,6 @@
       },
       relogEmail () {
         this.dialogEmail = false
-        this.$store.dispatch('clearDataFromStore')
         this.userType = null
         this.userLogged = false
         localStorage.clear()
@@ -324,7 +333,6 @@
       },
       relogPsw () {
         this.dialog = false
-        this.$store.dispatch('clearDataFromStore')
         this.userType = null
         this.userLogged = false
         localStorage.clear()

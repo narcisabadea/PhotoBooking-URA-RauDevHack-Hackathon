@@ -13,7 +13,8 @@ export default new Vuex.Store({
     usersDetails: null,
     photographersDetails: null,
     portofoliosDetails: null,
-    bookingsDetails: null
+    bookingsDetails: null,
+    user: null
   },
 // helps you modify 'state' data
   mutations: {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     setBookingsDetails(state, payload) {
       state.bookingsDetails = payload
+    },
+    setUser(state, payload) {
+      state.user = payload
     }
     // example: payload => data that come from actions
     //   setUserDetails(state, payload) {
@@ -45,24 +49,47 @@ export default new Vuex.Store({
           users.push(myObj[key])
         }
           )
-          console.log(users)
         commit('setUsersDetails',  users)
       })
     },
     readPhotographers({commit}) {
-      firebase.database().ref('fotografi').on('value', snapshot => {
-        commit('setPhotographersDetails', snapshot.val())
+      firebase.database().ref('fotografi/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let photographers = []
+        keys.forEach(key => {
+          photographers.push(myObj[key])
+        }
+          )
+        commit('setPhotographersDetails', photographers)
       })
     },
     readPortofolios({commit}) {
-      firebase.database().ref('portofoliu').on('value', snapshot => {
-        commit('setPortofoliosDetails', snapshot.val())
+      firebase.database().ref('portofoliu/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let portofolios = []
+        keys.forEach(key => {
+          portofolios.push(myObj[key])
+        }
+          )
+        commit('setPortofoliosDetails', portofolios)
       })
     },
     readBookings({commit}) {
-      firebase.database().ref('booking').on('value', snapshot => {
-        commit('setBookingsDetails', snapshot.val())
+      firebase.database().ref('rezervari/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let bookings = []
+        keys.forEach(key => {
+          bookings.push(myObj[key])
+        }
+          )
+        commit('setBookingsDetails', bookings)
       })
+    },
+    loginUser({commit}, payload) {
+      commit('setUser', {type: payload.type, id: payload.id})
     }
     //   example: {commit} => sends data to 'functionName' from mutations in order to modify data in state and send as 2nd parammeter the value
     //   getUserDetails({ commit }) {
@@ -75,6 +102,7 @@ export default new Vuex.Store({
     usersDetails: state => state.usersDetails,
     photographersDetails: state => state.photographersDetails,
     portofoliosDetails: state => state.portofoliosDetails,
-    bookingsDetails: state => state.bookingsDetails
+    bookingsDetails: state => state.bookingsDetails,
+    user: state => state.user
   }
 })
