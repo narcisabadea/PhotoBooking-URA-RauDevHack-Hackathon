@@ -1,24 +1,26 @@
 <template>
   <v-app>
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
-    <v-toolbar app class="primary">
+    <v-toolbar app class="primary" flat>
       <v-toolbar-title class="headline">
         <span class="text-uppercase">rau</span>
         <span class="font-weight-light">DevHack</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="!userLogged">
+      <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="!logout" class="white--text">
         Login
       </v-btn>
-      <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!userLogged">
+      <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
         Sign up
+      </v-btn>
+      <v-btn flat class="white--text"  router to = "/Test">
+        Test
       </v-btn>
       <v-menu offset-y v-if="userType === 'admin'">
         <v-btn
           flat
           slot="activator">
         <v-badge color="red"  class="white--text">
-          <v-icon slot="badge" dark small v-if="notification">notifications</v-icon>
           <v-icon left >pie_chart</v-icon>Dashboard
         </v-badge>
         </v-btn>
@@ -30,39 +32,53 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-menu offset-y v-if="userLogged">
+      <v-menu offset-y v-if="logout">
         <v-btn
           flat
           slot="activator">
           <v-icon left  class="white--text">account_circle</v-icon><div  class="white--text">Cont</div>
         </v-btn>
         <v-list>
-          <v-list-tile>
-            <router-link to="/Profile" tag="li" style="cursor:pointer">
+          <v-list-tile v-if="user.type === 'client'">
+            <router-link to="/ProfilClient" tag="li" style="cursor:pointer">
               <v-list-tile-title>Detalii cont</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-list-tile v-if="userType === 'user'">
-            <router-link to="/RequestUniversity" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Activeaza universitate</v-list-tile-title><v-icon right>star_border</v-icon>
+          <v-list-tile v-if="user.type === 'photo'">
+            <router-link to="/ProfilFotograf" tag="li" style="cursor:pointer">
+              <v-list-tile-title>Detalii cont</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-list-tile v-if="userType === 'requesting'">
-            <router-link to="/SentRequests" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Vezi status cerere</v-list-tile-title><v-icon right>star_border</v-icon>
+          <v-list-tile v-if="user.type === 'client'">
+            <router-link to="/Favoriti" tag="li" style="cursor:pointer">
+              <v-list-tile-title>Fotografi favoriti</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-list-tile v-if="userType === 'university'">
-            <router-link to="/University" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Detalii universitate</v-list-tile-title>
+          <v-list-tile v-if="user.type === 'client'">
+            <router-link to="/CereriTrimise" tag="li" style="cursor:pointer">
+              <v-list-tile-title>Cereri trimise</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-divider></v-divider>
-          <v-list-tile @click="signOut()" tag="li" style="cursor:pointer">
-            <v-list-tile-title>Iesire cont</v-list-tile-title>
+          <v-list-tile v-if="user.type === 'photo'">
+            <router-link to="/CalendarAcceptate" tag="li" style="cursor:pointer">
+              <v-list-tile-title>Calendar</v-list-tile-title>
+            </router-link>
+          </v-list-tile>
+          <v-list-tile v-if="user.type === 'photo'">
+            <router-link to="/CereriAcceptateDecline" tag="li" style="cursor:pointer">
+              <v-list-tile-title>Cereri</v-list-tile-title>
+            </router-link>
+          </v-list-tile>
+          <v-list-tile v-if="user.type === 'photo'">
+            <router-link to="/Istoric" tag="li" style="cursor:pointer">
+              <v-list-tile-title>Istoric</v-list-tile-title>
+            </router-link>
           </v-list-tile>
         </v-list>
       </v-menu>
+      <v-btn @click="signOut()" flat v-if="logout" class="white--text">
+        Logout
+      </v-btn>
     </v-toolbar>
 
     <!-- continutul paginii  -->
@@ -275,6 +291,18 @@ export default {
   },
 // functii ce se apeleaza de fiecare data cand o valoare din interior se modifica. Numele functiei se poate utiliza si pe post de variabila daca aceasta 'return'-eaza
   computed: {
+    logout () {
+      if (!this.user) {
+        return false
+      } else if (!this.user.type) {
+        return false
+      } else {
+        return true
+      }
+    },
+    user () {
+      return this.$store.getters.user
+    },
     verifyFormErrorsSignIn () {
       return this.formSignIn.password.length > 3 && /.+@.+/.test(this.formSignIn.email)
     },
@@ -295,92 +323,69 @@ export default {
 // functii ce se apeleaza la cerere
   methods: {
     userSign (email, password) {
-      if (this.formSignIn === true) {
-        this.$store.getters.photographersDetails
-      } else {
-        this.$store.getters.usersDetails
-      }
-      firebase.auth().signInWithEmailAndPassword(this.formSignIn.email, this.formSignIn.password)
-        .then(user => {
-          firebase.firestore().collection('Clienti').doc(firebase.auth().currentUser.uid)
-            .get()
-            .then(snapshot => {
-              var userDetails = []
-              userDetails = {
-                name: snapshot.data().name,
-                surname: snapshot.data().surname,
-                locality: snapshot.data().locality,
-                id: snapshot.data().id,
-                birthday: snapshot.data().birthday,
-                sex: snapshot.data().sex,
-                gdpr: snapshot.data().gdpr,
-                email: snapshot.data().email,
-                phone: snapshot.data().telefon
-              }
-              this.userLogged = true
-              this.dialogLogIn = false
-              this.errorLogin = null
-            })
-        })
-        .catch(error => {
-          switch (error.code) {
-            case 'auth/invalid-email': this.errorLogin = 'Adresa de email invalida'
-              break
-            case 'auth/email-already-in-use': this.errorLogin = 'Email deja utilizat pentru alt cont'
-              break
-            case 'auth/weak-password': this.errorLogin = 'Parola slaba'
-              break
-            case 'auth/user-not-found': this.errorLogin = 'Adresa de email inexistenta'
-              break
-            case 'auth/user-disabled': this.errorLogin = 'Cont dezactivat'
-              break
-            case 'auth/wrong-password': this.errorLogin = 'Parola gresita'
-              break
+      if (this.formSignIn.switch === true) {
+        let details = this.$store.getters.photographersDetails
+        details.forEach(element => {
+          if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
+            this.$store.dispatch('loginUser', {type: 'photo', id: element.idFotograf })
+            this.dialogLogIn = false
+          } else {
+            this.errorLogin = 'Date invalide'
           }
-        })
+        });
+      } else {
+        let details = this.$store.getters.usersDetails
+        details.forEach(element => {
+          if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
+            this.$store.dispatch('loginUser', {type: 'client', id: element.idClient})
+            this.dialogLogIn = false
+          } else {
+            this.errorLogin = 'Date invalide'
+          }
+        });
+      }
     },
-    /**
-    * This function create a new user with email & password, add the informations from form in database using user id and
-    * add those informations in localStorage
-    */
     newAccount () {
-      firebase.auth().createUserWithEmailAndPassword(this.formSignUp.email2, this.formSignUp.password2)
-        .then(user => {
-          firebase.firestore().collection('Users/').doc(firebase.auth().currentUser.uid).set({
-            name: this.formSignUp.name,
-            surname: this.formSignUp.surname,
-            id: firebase.auth().currentUser.uid,
+      if (this.formSignUp.switch === true) {
+        firebase.database().ref('fotografi/')
+          .push({
+            dataInregistrare: new Date(),
+            nume: this.formSignUp.name,
+            parola: this.formSignUp.passwordConfirm,
             email: this.formSignUp.email2,
-            birthday: this.formSignUp.birthday,
-            sex: this.formSignUp.sex,
-            gdpr: this.formSignUp.gdpr,
-            phone: this.formSignUp.phone
-          })
-          this.dialogLogIn = false
-          this.errorSignUp = null
-          this.userSign(this.formSignUp.email2, this.formSignUp.password2)
-        })
-        .catch(error => {
-          this.errorSignUp = error.message
-          // switch (error.code) {
-          //   case 'auth/invalid-email': this.errorSignUp = 'Adresa de email invalida'
-          //     break
-          //   case 'auth/email-already-in-use': this.errorSignUp = 'Email deja utilizat pentru alt cont'
-          //     break
-          //   case 'auth/weak-password': this.errorSignUp = 'Parola slaba'
-          //     break
-          //   case 'auth/user-not-found': this.errorSignUp = 'Adresa de email inexistenta'
-          //     break
-          //   case 'auth/user-disabled': this.errorSignUp = 'Cont dezactivat'
-          //     break
-          //   case 'auth/wrong-password': this.errorSignUp = 'Parola gresita'
-          //     break
-          // }
-        })
+            prenume: this.formSignUp.surname,
+            telefon: this.formSignUp.phone,
+            dataNastere: this.formSignUp.birthday,
+            sex: this.sex,
+            idFotograf: 'test'
+          }).then(ceva => {
+            this.dialogSignUp = false
+            this.dialogLogIn = true
+          }).birthday.then((snap) => {
+            firebase.database().ref('fotografi/'+ snap.key).update({
+          idFotograf: snap.key,
+        })})
+      } else {
+       firebase.database().ref('clienti/')
+          .push({
+            dataInregistrare: new Date(),
+            nume: this.formSignUp.name,
+            parola: this.formSignUp.passwordConfirm,
+            email: this.formSignUp.email2,
+            prenume: this.formSignUp.surname,
+            telefon: this.formSignUp.phone,
+            dataNastere: this.formSignUp.birthday,
+            sex: this.sex,
+            idClient: 'test'
+          }).then(ceva => {
+            this.dialogSignUp = false
+            this.dialogLogIn = true
+          }).birthday.then((snap) => {
+            firebase.database().ref('clienti/'+ snap.key).update({
+          idClient: snap.key,
+        })})
+      }
     },
-    /**
-    * This function help users to send a reset email
-    */
     forgotPassword () {
       const adresaEmail = prompt('Introduceti adresa de email', '')
       firebase.auth().sendPasswordResetEmail(adresaEmail)
@@ -390,35 +395,29 @@ export default {
           window.alert(error.message)
         })
     },
-    /**
-    * This method calls the function for sign out
-    */
     signOut () {
-      this.$store.dispatch('clearDataFromStore')
-      this.userType = null
-      this.userLogged = false
+      this.$store.dispatch('loginUser', {type: null})
       localStorage.clear()
       router.push('/Home')
     }
-    // example: dispatch => cuvant cheie pentru apelarea unei functii din 'store (actions)' ce pot trimite ca parametru date
-    // login () {
-    //   this.$store.dispatch('login', {username: this.email, password: this.password})
-    //   this.dialogLogIn = false
-    // }
   },
 // LIFECYCLE: functie ce se apeleaza inainte de construirea DOM-ului
   created() {
     this.rules = formRules
     this.$store.dispatch('readUsers')
+    this.$store.dispatch('readPhotographers')
+    this.$store.dispatch('readPortofolios')
+    this.$store.dispatch('readBookings')
+    this.$store.dispatch('verifyUserLogged')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {
     // - DATABASE
 
     // read from firebase
-    firebase.database().ref('test').on('value', snapshot => {
-      console.log(snapshot.val())
-    })
+    // firebase.database().ref('test').on('value', snapshot => {
+    //   console.log(snapshot.val())
+    // })
 
     // get authenticated user ID
     // var userId = firebase.auth().currentUser.uid;
