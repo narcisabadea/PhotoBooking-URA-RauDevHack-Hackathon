@@ -14,7 +14,9 @@ export default new Vuex.Store({
     photographersDetails: null,
     portofoliosDetails: null,
     bookingsDetails: null,
-    rezervari: 'pending'
+    user: null,
+    rezervari: 'pending',
+    portofoliosData: null
   },
 // helps you modify 'state' data
   mutations: {
@@ -29,6 +31,12 @@ export default new Vuex.Store({
     },
     setBookingsDetails(state, payload) {
       state.bookingsDetails = payload
+    },
+    setUser(state, payload) {
+      state.user = payload
+    },
+    setPortofoliosData(state, payload) {
+      state.portofoliosData = payload
     }
   },
    
@@ -52,19 +60,53 @@ export default new Vuex.Store({
       })
     },
     readPhotographers({commit}) {
-      firebase.database().ref('fotografi').on('value', snapshot => {
-        commit('setPhotographersDetails', snapshot.val())
+      firebase.database().ref('fotografi/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let photographers = []
+        keys.forEach(key => {
+          photographers.push(myObj[key])
+        }
+          )
+        commit('setPhotographersDetails', photographers)
       })
     },
     readPortofolios({commit}) {
-      firebase.database().ref('portofoliu').on('value', snapshot => {
-        commit('setPortofoliosDetails', snapshot.val())
+      firebase.database().ref('portofoliu/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let portofolios = []
+        keys.forEach(key => {
+          portofolios.push(myObj[key])
+        }
+          )
+        commit('setPortofoliosDetails', portofolios)
       })
     },
     readBookings({commit}) {
-      firebase.database().ref('rezervari').on('value', snapshot => {
-        commit('setBookingsDetails', snapshot.val())
+      firebase.database().ref('rezervari/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let bookings = []
+        keys.forEach(key => {
+          bookings.push(myObj[key])
+        }
+          )
+        commit('setBookingsDetails', bookings)
       })
+    },
+    loginUser({commit}, payload) {
+      commit('setUser', {type: payload.type, id: payload.id})
+      let user = {
+        type: payload.type, 
+        id: payload.id
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+    verifyUserLogged ({commit}) {
+      if (localStorage.getItem('user')) {
+        commit('setUser', {type: JSON.parse(localStorage.getItem('user')).type, id: JSON.parse(localStorage.getItem('user')).id})
+      }
     },
     readRequests ({commit}) {
       commit('setRequests', [])
@@ -88,6 +130,9 @@ export default new Vuex.Store({
         firebase.database().ref('rezervari/' + payload.itemId).update({
           status: 'approved'
         })
+      },
+      getPortofoliosData ({commit}, payload) {
+        commit('setPortofoliosData', payload)
       }
   },
 // helps you get data from this document wherever you need it
@@ -97,6 +142,8 @@ export default new Vuex.Store({
     photographersDetails: state => state.photographersDetails,
     portofoliosDetails: state => state.portofoliosDetails,
     bookingsDetails: state => state.bookingsDetails,
+    user: state => state.user,
     rezervari: state => state.rezervari,
+    portofoliosData: state => state.portofoliosData
   }
 })

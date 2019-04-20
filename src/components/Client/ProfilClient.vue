@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout align-center justify-space-around row fill-height>
-      <v-flex xs8>
+      <v-flex xs12>
         <v-card>
           <v-card-text>
             <v-text-field
@@ -10,7 +10,7 @@
               label="Nume"
               id="nume"
               :v-model = "name"
-              :value = "usersDetails[0].nume"
+              :value = "thisUserDetails.nume"
               :disabled="disabledDetails"
             ></v-text-field>
             <v-spacer></v-spacer>
@@ -19,7 +19,15 @@
               name="prenume"
               label="Prenume"
               id="prenume"
-              :value = "usersDetails[0].prenume"
+              :value = "thisUserDetails.prenume"
+              :disabled="disabledDetails"
+            ></v-text-field>
+            <v-text-field
+              prepend-icon="account_circle"
+              name="telefon"
+              label="Telefon"
+              id="telefon"
+              :value = "thisUserDetails.telefon"
               :disabled="disabledDetails"
             ></v-text-field>
             <v-autocomplete
@@ -27,7 +35,7 @@
               name="sex"
               id="sex"
               label="Sex"
-              :value = "usersDetails[0].sex"
+              :value = "thisUserDetails.sex"
               :disabled="disabledDetails"
               :items="gender"
             ></v-autocomplete>
@@ -36,7 +44,7 @@
               :close-on-content-click="false"
               v-model="menu"
               :nudge-right="40"
-              :return-value.sync="usersDetails[0].dataNastere"
+              :return-value.sync="thisUserDetails.dataNastere"
               lazy
               transition="scale-transition"
               offset-y
@@ -46,10 +54,10 @@
             >
               <v-text-field
                 slot="activator"
-                v-model="usersDetails[0].dataNastere"
+                v-model="thisUserDetails.dataNastere"
                 label="Data nasterii"
                 prepend-icon="event"
-                :value = "usersDetails[0].dataNastere"
+                :value = "thisUserDetails.dataNastere"
                 id="birthday"
                 readonly
                 :disabled="disabledDetails"
@@ -83,6 +91,7 @@
 
               <v-btn flat color="primary" router to = "/home">Inapoi</v-btn>
             </v-layout>
+
             <v-dialog v-model="dialogEmail" width="400">
               <v-card>
                 <v-card-title class="headline grey lighten-2">
@@ -93,22 +102,13 @@
                     prepend-icon="email"
                     name="oldEmail"
                     id="oldEmail"
-                    :value = "usersDetails[0].email"
+                    :value = "thisUserDetails.email"
                     :disabled="disabledDetails"
                   ></v-text-field>
                   <v-text-field
                     prepend-icon="email"
                     v-model="email2"
                     label="Adresa noua de email">
-                  </v-text-field>
-                  <v-text-field
-                    prepend-icon="lock"
-                    v-model="password3"
-                    :append-icon="show3 ? 'visibility_off' : 'visibility'"
-                    :type="show3 ? 'text' : 'password'"
-                    @click:append="show3 = !show3"
-                    label="Introduceti parola">
-                      Parola
                   </v-text-field>
                 </v-card-text>
                 <v-card-actions>
@@ -120,21 +120,6 @@
                   >
                     Salveaza
                   </v-btn>
-                  <v-card v-if="sendEmail === true">
-                    <v-alert
-                      :value="true"
-                      type="success"
-                    >
-                      Adresa de email a fost salvata cu succes, va rugam sa va logati din nou.
-                    </v-alert>
-                    <v-btn
-                      color="primary"
-                      flat
-                      @click="relogEmail()"
-                    >
-                      Ok
-                    </v-btn>
-                  </v-card>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -148,9 +133,10 @@
                   <v-text-field
                     prepend-icon="lock"
                     v-model="password4"
-                    :append-icon="show4 ? 'visibility_off' : 'visibility'"
+                    :rules="[comparePasswordsActual]"
+                    :append-icon="show1 ? 'visibility_off' : 'visibility'"
                     :type="show1 ? 'text' : 'password'"
-                    @click:append="show4 = !show4"
+                    @click:append="show1 = !show1"
                     label="Parola actuala">
                       Parola
                   </v-text-field>
@@ -158,9 +144,9 @@
                     prepend-icon="lock"
                     v-model="password2"
                     id="pass"
-                    :append-icon="show1 ? 'visibility_off' : 'visibility'"
-                    :type="show1 ? 'text' : 'password'"
-                    @click:append="show1 = !show1"
+                    :append-icon="show2 ? 'visibility_off' : 'visibility'"
+                    :type="show2 ? 'text' : 'password'"
+                    @click:append="show2 = !show2"
                     label="Parola noua">
                       Parola
                   </v-text-field>
@@ -184,21 +170,6 @@
                   >
                     Salveaza
                   </v-btn>
-                  <v-card v-if="sendPsw === true">
-                    <v-alert
-                      :value="true"
-                      type="success"
-                    >
-                    Parola a fost schimbata cu succes, va rugam sa va logati din nou.
-                    </v-alert>
-                    <v-btn
-                      color="primary"
-                      flat
-                      @click="relogPsw()"
-                    >
-                      Ok
-                    </v-btn>
-                  </v-card>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -211,6 +182,7 @@
 </template>
 <script>
 /* eslint-disable */
+import * as firebase from "firebase";
   export default {
     name: 'Profile',
     data () {
@@ -249,88 +221,65 @@
         logoFac: '',
         typeFac: '',
         downloadURL: '',
-        sendEmail: false,
-        sendPsw: false
+        sendEmail: false
       }
     },
     computed: {
+      user () {
+        return this.$store.getters.user
+      },
       usersDetails () {
         return this.$store.getters.usersDetails
       },
-      comparePasswords () {
-        return this.password2 !== this.passwordConfirm ? 'Parolele nu coincid' : ''
+      thisUserDetails () {
+        let detalii = null
+        this.usersDetails.forEach(element => {
+          if (element.idClient === this.user.id) {
+            detalii = element
+          }
+        });
+        return detalii
       },
+      comparePasswords () {
+        return this.password2 !== this.passwordConfirm ? 'Parolele nu coincid' : false
+      },
+      comparePasswordsActual () {
+        return this.password4 !== this.thisUserDetails.parola ? 'Parola actuala este incorecta' : false
+      }
+    },
+    methods: {
       saveDetails () {
         var name = document.getElementById('nume').value
         var surname = document.getElementById('prenume').value
-        var locality = document.getElementById('localitate').value
         var birthday = document.getElementById('birthday').value
+        var phone = document.getElementById('telefon').value
         var sex = document.getElementById('sex').value
         this.disabledDetails = true
         this.changeDetails = false
-        var userId = JSON.parse(localStorage.getItem('userDetails')).id
-        firebase.firestore().collection('Users/').doc(userId).update({
-          nume: nume,
-          prenume: prenume,
-          dataNastere: dataNastere,
-          sex: sex
+        firebase.database().ref('clienti/'+ this.user.id).update({
+          nume: name,
+          prenume: surname,
+          dataNastere: birthday,
+          sex: sex,
+          telefon: phone
         })
-        var usersDetails = this.usersDetails
-        usersDetails.nume = nume
-        usersDetails.prenume = prenume
-        usersDetails.dataNastere = dataNastere
-        usersDetails.sex = sex
       },
       updateEmail () {
-        this.sendEmail = true
-        firebase.auth().signInWithEmailAndPassword(this.userDetails.email, this.password3).then(
-          user => {
-            firebase.auth().currentUser.updateEmail(this.email2).then(ceva => {
-              var userId = JSON.parse(localStorage.getItem('userDetails')).id
-              firebase.firestore().collection('Users').doc(userId).update({
-                email: this.email2
-              })
-              var details = JSON.parse(localStorage.getItem('userDetails'))
-              details.email = this.email2
-              localStorage.setItem('userDetails', JSON.stringify(details))
-            }).catch(error => {
-              console.log('error', error)
-            })
-          }).catch(error => {
-          console.log(error)
+        firebase.database().ref('clienti/'+ this.user.id).update({
+          email: this.email2
         })
-      },
-      relogEmail () {
-        this.dialogEmail = false
-        this.$store.dispatch('clearDataFromStore')
-        this.userType = null
-        this.userLogged = false
-        localStorage.clear()
-        router.push('/Home')
       },
       updatePassword () {
-        this.sendPsw = true
-        firebase.auth().signInWithEmailAndPassword(this.userDetails.email, this.password4).then(
-          user => {
-            firebase.auth().currentUser.updatePassword(this.password2).then(ceva => {
-              // this.$store.dispatch('signOut')
-              // router.push({path: '/login'})
-            }).catch(error => {
-              console.log(error)
-            })
-          }).catch(error => {
-          console.log(error)
-        })
-      },
-      relogPsw () {
-        this.dialog = false
-        this.$store.dispatch('clearDataFromStore')
-        this.userType = null
-        this.userLogged = false
-        localStorage.clear()
-        router.push('/Home')
-      },
-    },
+        this.dialog = true
+        if (this.thisUserDetails.parola === this.password4) {
+          firebase.database().ref('clienti/' + this.user.id).update({
+            parola: this.password2
+          })
+        } else {
+          this.sendPsw = true
+        }
+      }
+    } 
   }
 </script>
 
