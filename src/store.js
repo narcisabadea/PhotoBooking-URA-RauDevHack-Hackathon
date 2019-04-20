@@ -14,7 +14,9 @@ export default new Vuex.Store({
     photographersDetails: null,
     portofoliosDetails: null,
     bookingsDetails: null,
-    user: null
+    user: null,
+    rezervari: 'pending',
+    portofoliosData: null
   },
 // helps you modify 'state' data
   mutations: {
@@ -32,12 +34,16 @@ export default new Vuex.Store({
     },
     setUser(state, payload) {
       state.user = payload
+    },
+    setPortofoliosData(state, payload) {
+      state.portofoliosData = payload
     }
+  },
+   
     // example: payload => data that come from actions
     //   setUserDetails(state, payload) {
     //     state.userDetails = payload
     //   }
-  },
 // functions that are called in other components in order to modify data from state
   actions: {
     readUsers({commit}) {
@@ -49,6 +55,7 @@ export default new Vuex.Store({
           users.push(myObj[key])
         }
           )
+          console.log(users[0])
         commit('setUsersDetails',  users)
       })
     },
@@ -100,11 +107,33 @@ export default new Vuex.Store({
       if (localStorage.getItem('user')) {
         commit('setUser', {type: JSON.parse(localStorage.getItem('user')).type, id: JSON.parse(localStorage.getItem('user')).id})
       }
-    }
-    //   example: {commit} => sends data to 'functionName' from mutations in order to modify data in state and send as 2nd parammeter the value
-    //   getUserDetails({ commit }) {
-    //     commit('setUserDetails', JSON.parse(localStorage.getItem('details')))
-    //   }
+    },
+    readRequests ({commit}) {
+      commit('setRequests', [])
+      var altArray = []
+      var bookingsDetails = {}
+      return firebase.database().ref('rezervari')
+        .onSnapshot(snapshot => {
+          snapshot.forEach(obj => {
+            bookingsDetails[obj.id] = {
+              dataStart: obj.data().dataStart,
+              dataEnd: obj.data().dataEnd,
+              status: obj.data().status,
+              userId: obj.data().userId
+            }
+          })
+          altArray['rezervari'] = bookingsDetails
+          commit('setRequests', bookingsDetails)
+        })
+      },
+      approveRequest (payload) {
+        firebase.database().ref('rezervari/' + payload.itemId).update({
+          status: 'approved'
+        })
+      },
+      getPortofoliosData ({commit}, payload) {
+        commit('setPortofoliosData', payload)
+      }
   },
 // helps you get data from this document wherever you need it
   getters: {
@@ -113,6 +142,8 @@ export default new Vuex.Store({
     photographersDetails: state => state.photographersDetails,
     portofoliosDetails: state => state.portofoliosDetails,
     bookingsDetails: state => state.bookingsDetails,
-    user: state => state.user
+    user: state => state.user,
+    rezervari: state => state.rezervari,
+    portofoliosData: state => state.portofoliosData
   }
 })
