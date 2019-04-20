@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
-    <v-toolbar app>
+    <v-toolbar app class="primary">
       <v-toolbar-title class="headline">
         <span class="text-uppercase">rau</span>
         <span class="font-weight-light">DevHack</span>
@@ -265,7 +265,7 @@ export default {
       show: false,
       show1: false,
       show2: false,
-      gender: ['Feminin', 'Masculin'],
+      gender: ['F', 'M'],
       sex: null,
       dialogLogIn: false,
       dialogSignUp: false,
@@ -296,6 +296,11 @@ export default {
 // functii ce se apeleaza la cerere
   methods: {
     userSign (email, password) {
+      if (this.formSignIn === true) {
+        this.$store.getters.photographersDetails
+      } else {
+        this.$store.getters.usersDetails
+      }
       firebase.auth().signInWithEmailAndPassword(this.formSignIn.email, this.formSignIn.password)
         .then(user => {
           firebase.firestore().collection('Clienti').doc(firebase.auth().currentUser.uid)
@@ -489,4 +494,17 @@ export default {
   .v-dialog {
     background-color: white;
   }
+    .flex {
+    max-width: fit-content !important;
+    flex-basis: auto;
+  }
+  .application {
+  background: #f5f6fa !important;
+}
+.v-dialog {
+  max-width: max-content;
+}
+.gradient {
+  background: linear-gradient(to top right, #f7971e 5%, #ffd200 100%);
+}
 </style>
