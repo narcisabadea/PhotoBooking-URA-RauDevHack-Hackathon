@@ -18,6 +18,7 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
 import Home from './components/Home'
 import * as firebase from "firebase";
 export default {
