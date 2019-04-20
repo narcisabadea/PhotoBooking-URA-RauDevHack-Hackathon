@@ -46,7 +46,7 @@ export default {
   },
 // LIFECYCLE: functie ce se apeleaza inainte de construirea DOM-ului
   created() {
-    // this.$store.dispatch('getUserDetails')
+    this.$store.dispatch('readUsers')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {

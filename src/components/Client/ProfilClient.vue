@@ -10,7 +10,7 @@
               label="Nume"
               id="nume"
               :v-model = "name"
-              :value = userDetails.name
+              :value = "usersDetails[0].nume"
               :disabled="disabledDetails"
             ></v-text-field>
             <v-spacer></v-spacer>
@@ -19,24 +19,15 @@
               name="prenume"
               label="Prenume"
               id="prenume"
-              :value = userDetails.surname
+              :value = "usersDetails[0].prenume"
               :disabled="disabledDetails"
             ></v-text-field>
-            <v-autocomplete
-              prepend-icon="place"
-              name="localitate"
-              id="localitate"
-              label="Localitate"
-              :value = userDetails.locality
-              :disabled="disabledDetails"
-              :items="locations"
-            ></v-autocomplete>
             <v-autocomplete
               prepend-icon="account_circle"
               name="sex"
               id="sex"
               label="Sex"
-              :value = userDetails.sex
+              :value = "usersDetails[0].sex"
               :disabled="disabledDetails"
               :items="gender"
             ></v-autocomplete>
@@ -45,7 +36,7 @@
               :close-on-content-click="false"
               v-model="menu"
               :nudge-right="40"
-              :return-value.sync="userDetails.birthday"
+              :return-value.sync="usersDetails[0].dataNastere"
               lazy
               transition="scale-transition"
               offset-y
@@ -55,10 +46,10 @@
             >
               <v-text-field
                 slot="activator"
-                v-model="userDetails.birthday"
+                v-model="usersDetails[0].dataNastere"
                 label="Data nasterii"
                 prepend-icon="event"
-                :value = userDetails.birthday
+                :value = "usersDetails[0].dataNastere"
                 id="birthday"
                 readonly
                 :disabled="disabledDetails"
@@ -102,7 +93,7 @@
                     prepend-icon="email"
                     name="oldEmail"
                     id="oldEmail"
-                    :value = userDetails.email
+                    :value = "usersDetails[0].email"
                     :disabled="disabledDetails"
                   ></v-text-field>
                   <v-text-field
@@ -125,7 +116,7 @@
                   <v-btn
                     color="primary"
                     flat
-                    @click="updateEmail"
+                    @click="updateEmail()"
                   >
                     Salveaza
                   </v-btn>
@@ -139,7 +130,7 @@
                     <v-btn
                       color="primary"
                       flat
-                      @click="relogEmail"
+                      @click="relogEmail()"
                     >
                       Ok
                     </v-btn>
@@ -189,7 +180,7 @@
                   <v-btn
                     color="primary"
                     flat
-                    @click="updatePassword"
+                    @click="updatePassword()"
                   >
                     Salveaza
                   </v-btn>
@@ -203,7 +194,7 @@
                     <v-btn
                       color="primary"
                       flat
-                      @click="relogPsw"
+                      @click="relogPsw()"
                     >
                       Ok
                     </v-btn>
@@ -242,7 +233,7 @@
         password4: '',
         passwordConfirm: '',
         univType: ['Stat', 'Privat'],
-        gender: ['Feminin', 'Masculin'],
+        gender: ['F', 'M'],
         numeUniv: '',
         nameUniversity: '',
         descriptionUniv: '',
@@ -262,17 +253,12 @@
       }
     },
     computed: {
-      userDetails () {
-        return this.$store.getters.userDetails[0]
+      usersDetails () {
+        return this.$store.getters.usersDetails
       },
       comparePasswords () {
         return this.password2 !== this.passwordConfirm ? 'Parolele nu coincid' : ''
-      },
-      getuserdetails () {
-      const x = this.keysUsers.indexOf(this.user.uid)
-      const userdet = this.usersDetails[x]
-      return userdet
-    }
+      }
     },
   }
 </script>

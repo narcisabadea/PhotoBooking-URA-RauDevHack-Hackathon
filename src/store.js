@@ -37,16 +37,17 @@ export default new Vuex.Store({
 // functions that are called in other components in order to modify data from state
   actions: {
     readUsers({commit}) {
-      firebase.database().ref('clienti').on('value', snapshot => {
-        commit('setUsersDetails', snapshot.val())
+      firebase.database().ref('clienti/').on('value', snap => {
+        const keys = Object.keys(snap.val())
+        let myObj = snap.val()
+        let users = []
+        keys.forEach(key => {
+          users.push(myObj[key])
+        }
+          )
+          console.log(users)
+        commit('setUsersDetails',  users)
       })
-    },
-    getUserData({ commit }) {
-      firebase.database().ref('clienti/')
-          .on('value', snap => {
-              const myObj = snap.val()
-              commit('setUsersDetails', myObj)
-          })
     },
     readPhotographers({commit}) {
       firebase.database().ref('fotografi').on('value', snapshot => {
