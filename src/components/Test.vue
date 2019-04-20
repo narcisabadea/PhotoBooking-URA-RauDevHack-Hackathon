@@ -41,12 +41,10 @@
     },
   
 mounted(){
-
-
-  firebase.database().ref('portofoliu/').on('value', snap => {
+  firebase.database().ref('portofoliu/-LcvqccMplbefTIT7ADQ').on('value', snap => {
         const keys = Object.keys(snap.val())
          keys.forEach(key => {
-           this.y = snap.val()
+           this.y = snap.val()[key].denumire
          })
       })
     }
