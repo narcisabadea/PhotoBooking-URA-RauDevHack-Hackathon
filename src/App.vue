@@ -18,12 +18,14 @@
 </template>
 
 <script>
-// import Home from './components/Home'
+/* eslint-disable no-console */
 // import * as firebase from "firebase";
+import Home from './components/Home'
+import * as firebase from "firebase";
 export default {
   name: 'App',
   components: {
-    // Home
+    Home
   },
   data () {
     return {
@@ -48,6 +50,10 @@ export default {
   },
 // LIFECYCLE: functie ce se apeleaza inainte de construirea DOM-ului
   created() {
+    this.$store.dispatch('readUsers')
+    this.$store.dispatch('readPhotographers')
+    this.$store.dispatch('readPortofolios')
+    this.$store.dispatch('readBookings')
     // this.$store.dispatch('getUserDetails')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului

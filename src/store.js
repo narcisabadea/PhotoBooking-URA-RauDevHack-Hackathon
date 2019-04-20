@@ -38,25 +38,21 @@ export default new Vuex.Store({
   actions: {
     readUsers({commit}) {
       firebase.database().ref('clienti').on('value', snapshot => {
-        console.log(snapshot.val())
         commit('setUsersDetails', snapshot.val())
       })
     },
     readPhotographers({commit}) {
       firebase.database().ref('fotografi').on('value', snapshot => {
-        console.log(snapshot.val())
         commit('setPhotographersDetails', snapshot.val())
       })
     },
     readPortofolios({commit}) {
-      firebase.database().ref('fotografi').on('value', snapshot => {
-        console.log(snapshot.val())
+      firebase.database().ref('portofoliu').on('value', snapshot => {
         commit('setPortofoliosDetails', snapshot.val())
       })
     },
     readBookings({commit}) {
-      firebase.database().ref('fotografi').on('value', snapshot => {
-        console.log(snapshot.val())
+      firebase.database().ref('booking').on('value', snapshot => {
         commit('setBookingsDetails', snapshot.val())
       })
     }
