@@ -7,10 +7,10 @@
         <span class="font-weight-light">DevHack</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="user === null" class="white--text">
+      <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="!logout" class="white--text">
         Login
       </v-btn>
-      <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="user === null" class="white--text">
+      <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
         Sign up
       </v-btn>
       <v-btn flat class="white--text">
@@ -21,7 +21,6 @@
           flat
           slot="activator">
         <v-badge color="red"  class="white--text">
-          <v-icon slot="badge" dark small v-if="notification">notifications</v-icon>
           <v-icon left >pie_chart</v-icon>Dashboard
         </v-badge>
         </v-btn>
@@ -33,7 +32,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-menu offset-y v-if="user !== null">
+      <v-menu offset-y v-if="logout">
         <v-btn
           flat
           slot="activator">
@@ -346,48 +345,34 @@ export default {
         });
       }
     },
-    /**
-    * This function create a new user with email & password, add the informations from form in database using user id and
-    * add those informations in localStorage
-    */
     newAccount () {
-      firebase.auth().createUserWithEmailAndPassword(this.formSignUp.email2, this.formSignUp.password2)
-        .then(user => {
-          firebase.firestore().collection('Users/').doc(firebase.auth().currentUser.uid).set({
-            name: this.formSignUp.name,
-            surname: this.formSignUp.surname,
-            id: firebase.auth().currentUser.uid,
+      if (this.formSignUp.switch === true) {
+        firebase.database().ref('fotografi/')
+          .push({
+            dataInregistrare: new Date(),
+            nume: this.formSignUp.name,
+            parola: this.formSignUp.passwordConfirm,
             email: this.formSignUp.email2,
-            birthday: this.formSignUp.birthday,
-            sex: this.formSignUp.sex,
-            gdpr: this.formSignUp.gdpr,
-            phone: this.formSignUp.phone
+            prenume: this.formSignUp.surname,
+            telefon: this.formSignUp.phone,
+            dataNastere: this.formSignUp.birthday
+          }).then(ceva => {
+            this.dialogSignUp = false
+            this.dialogLogIn = true
           })
-          this.dialogLogIn = false
-          this.errorSignUp = null
-          this.userSign(this.formSignUp.email2, this.formSignUp.password2)
-        })
-        .catch(error => {
-          this.errorSignUp = error.message
-          // switch (error.code) {
-          //   case 'auth/invalid-email': this.errorSignUp = 'Adresa de email invalida'
-          //     break
-          //   case 'auth/email-already-in-use': this.errorSignUp = 'Email deja utilizat pentru alt cont'
-          //     break
-          //   case 'auth/weak-password': this.errorSignUp = 'Parola slaba'
-          //     break
-          //   case 'auth/user-not-found': this.errorSignUp = 'Adresa de email inexistenta'
-          //     break
-          //   case 'auth/user-disabled': this.errorSignUp = 'Cont dezactivat'
-          //     break
-          //   case 'auth/wrong-password': this.errorSignUp = 'Parola gresita'
-          //     break
-          // }
-        })
+      } else {
+       firebase.database().ref('clienti/')
+          .push({
+            dataInregistrare: new Date(),
+            nume: this.formSignUp.name,
+            parola: this.formSignUp.passwordConfirm,
+            email: this.formSignUp.email2,
+            prenume: this.formSignUp.surname,
+            telefon: this.formSignUp.phone,
+            dataNastere: this.formSignUp.birthday
+          })
+      }
     },
-    /**
-    * This function help users to send a reset email
-    */
     forgotPassword () {
       const adresaEmail = prompt('Introduceti adresa de email', '')
       firebase.auth().sendPasswordResetEmail(adresaEmail)
@@ -397,18 +382,10 @@ export default {
           window.alert(error.message)
         })
     },
-    /**
-    * This method calls the function for sign out
-    */
     signOut () {
       this.$store.dispatch('loginUser', {type: null})
       router.push('/Home')
     }
-    // example: dispatch => cuvant cheie pentru apelarea unei functii din 'store (actions)' ce pot trimite ca parametru date
-    // login () {
-    //   this.$store.dispatch('login', {username: this.email, password: this.password})
-    //   this.dialogLogIn = false
-    // }
   },
 // LIFECYCLE: functie ce se apeleaza inainte de construirea DOM-ului
   created() {
