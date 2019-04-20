@@ -20,12 +20,11 @@
 <script>
 /* eslint-disable no-console */
 // import * as firebase from "firebase";
-import Home from './components/Home'
-import * as firebase from "firebase";
+// import Home from './components/Home'
 export default {
   name: 'App',
   components: {
-    Home
+    // Home
   },
   data () {
     return {
