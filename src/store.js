@@ -47,7 +47,7 @@ export default new Vuex.Store({
           users.push(myObj[key])
         }
           )
-          console.log(users)
+          console.log(users[0])
         commit('setUsersDetails',  users)
       })
     },
