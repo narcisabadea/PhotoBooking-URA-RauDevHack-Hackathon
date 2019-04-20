@@ -13,7 +13,7 @@
       <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
         Sign up
       </v-btn>
-      <v-btn flat class="white--text">
+      <v-btn flat class="white--text"  router to = "/Test">
         Test
       </v-btn>
       <v-menu offset-y v-if="userType === 'admin'">
@@ -292,9 +292,9 @@ export default {
 // functii ce se apeleaza de fiecare data cand o valoare din interior se modifica. Numele functiei se poate utiliza si pe post de variabila daca aceasta 'return'-eaza
   computed: {
     logout () {
-      if (this.user === null) {
+      if (!this.user) {
         return false
-      } else if (this.user.type === null) {
+      } else if (!this.user.type) {
         return false
       } else {
         return true
@@ -355,11 +355,16 @@ export default {
             email: this.formSignUp.email2,
             prenume: this.formSignUp.surname,
             telefon: this.formSignUp.phone,
-            dataNastere: this.formSignUp.birthday
+            dataNastere: this.formSignUp.birthday,
+            sex: this.sex,
+            idFotograf: 'test'
           }).then(ceva => {
             this.dialogSignUp = false
             this.dialogLogIn = true
-          })
+          }).birthday.then((snap) => {
+            firebase.database().ref('fotografi/'+ snap.key).update({
+          idFotograf: snap.key,
+        })})
       } else {
        firebase.database().ref('clienti/')
           .push({
@@ -369,8 +374,16 @@ export default {
             email: this.formSignUp.email2,
             prenume: this.formSignUp.surname,
             telefon: this.formSignUp.phone,
-            dataNastere: this.formSignUp.birthday
-          })
+            dataNastere: this.formSignUp.birthday,
+            sex: this.sex,
+            idClient: 'test'
+          }).then(ceva => {
+            this.dialogSignUp = false
+            this.dialogLogIn = true
+          }).birthday.then((snap) => {
+            firebase.database().ref('clienti/'+ snap.key).update({
+          idClient: snap.key,
+        })})
       }
     },
     forgotPassword () {
@@ -384,6 +397,7 @@ export default {
     },
     signOut () {
       this.$store.dispatch('loginUser', {type: null})
+      localStorage.clear()
       router.push('/Home')
     }
   },
@@ -394,6 +408,7 @@ export default {
     this.$store.dispatch('readPhotographers')
     this.$store.dispatch('readPortofolios')
     this.$store.dispatch('readBookings')
+    this.$store.dispatch('verifyUserLogged')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {

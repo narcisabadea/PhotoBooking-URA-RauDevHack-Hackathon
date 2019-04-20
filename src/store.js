@@ -90,6 +90,16 @@ export default new Vuex.Store({
     },
     loginUser({commit}, payload) {
       commit('setUser', {type: payload.type, id: payload.id})
+      let user = {
+        type: payload.type, 
+        id: payload.id
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+    verifyUserLogged ({commit}) {
+      if (localStorage.getItem('user')) {
+        commit('setUser', {type: JSON.parse(localStorage.getItem('user')).type, id: JSON.parse(localStorage.getItem('user')).id})
+      }
     }
     //   example: {commit} => sends data to 'functionName' from mutations in order to modify data in state and send as 2nd parammeter the value
     //   getUserDetails({ commit }) {
