@@ -41,6 +41,13 @@ export default new Vuex.Store({
         commit('setUsersDetails', snapshot.val())
       })
     },
+    getUserData({ commit }) {
+      firebase.database().ref('clienti/')
+          .on('value', snap => {
+              const myObj = snap.val()
+              commit('setUsersDetails', myObj)
+          })
+    },
     readPhotographers({commit}) {
       firebase.database().ref('fotografi').on('value', snapshot => {
         commit('setPhotographersDetails', snapshot.val())

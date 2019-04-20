@@ -12,19 +12,16 @@
     <!-- continutul paginii  -->
     <v-content>
       <!-- componenta se va modifica de fiecare data cand se intra pe alta ruta din 'router' -->
-       <router-view></router-view>
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
-
 <script>
-/* eslint-disable no-console */
 import Home from './components/Home'
 import * as firebase from "firebase";
 export default {
   name: 'App',
   components: {
-    Home
   },
   data () {
     return {
@@ -49,10 +46,6 @@ export default {
   },
 // LIFECYCLE: functie ce se apeleaza inainte de construirea DOM-ului
   created() {
-    this.$store.dispatch('readUsers')
-    this.$store.dispatch('readPhotographers')
-    this.$store.dispatch('readPortofolios')
-    this.$store.dispatch('readBookings')
     // this.$store.dispatch('getUserDetails')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
@@ -60,9 +53,9 @@ export default {
     // - DATABASE
 
     // read from firebase
-    // firebase.database().ref('test').on('value', snapshot => {
-    //   console.log(snapshot.val())
-    // })
+    firebase.database().ref('test').on('value', snapshot => {
+      console.log(snapshot.val())
+    })
 
     // get authenticated user ID
     // var userId = firebase.auth().currentUser.uid;
