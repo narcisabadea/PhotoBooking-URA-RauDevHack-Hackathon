@@ -210,6 +210,7 @@
   </v-container>
 </template>
 <script>
+/* eslint-disable */
   export default {
     name: 'Profile',
     data () {
@@ -258,7 +259,77 @@
       },
       comparePasswords () {
         return this.password2 !== this.passwordConfirm ? 'Parolele nu coincid' : ''
-      }
+      },
+      saveDetails () {
+        var name = document.getElementById('nume').value
+        var surname = document.getElementById('prenume').value
+        var locality = document.getElementById('localitate').value
+        var birthday = document.getElementById('birthday').value
+        var sex = document.getElementById('sex').value
+        this.disabledDetails = true
+        this.changeDetails = false
+        var userId = JSON.parse(localStorage.getItem('userDetails')).id
+        firebase.firestore().collection('Users/').doc(userId).update({
+          nume: nume,
+          prenume: prenume,
+          dataNastere: dataNastere,
+          sex: sex
+        })
+        var usersDetails = this.usersDetails
+        usersDetails.nume = nume
+        usersDetails.prenume = prenume
+        usersDetails.dataNastere = dataNastere
+        usersDetails.sex = sex
+      },
+      updateEmail () {
+        this.sendEmail = true
+        firebase.auth().signInWithEmailAndPassword(this.userDetails.email, this.password3).then(
+          user => {
+            firebase.auth().currentUser.updateEmail(this.email2).then(ceva => {
+              var userId = JSON.parse(localStorage.getItem('userDetails')).id
+              firebase.firestore().collection('Users').doc(userId).update({
+                email: this.email2
+              })
+              var details = JSON.parse(localStorage.getItem('userDetails'))
+              details.email = this.email2
+              localStorage.setItem('userDetails', JSON.stringify(details))
+            }).catch(error => {
+              console.log('error', error)
+            })
+          }).catch(error => {
+          console.log(error)
+        })
+      },
+      relogEmail () {
+        this.dialogEmail = false
+        this.$store.dispatch('clearDataFromStore')
+        this.userType = null
+        this.userLogged = false
+        localStorage.clear()
+        router.push('/Home')
+      },
+      updatePassword () {
+        this.sendPsw = true
+        firebase.auth().signInWithEmailAndPassword(this.userDetails.email, this.password4).then(
+          user => {
+            firebase.auth().currentUser.updatePassword(this.password2).then(ceva => {
+              // this.$store.dispatch('signOut')
+              // router.push({path: '/login'})
+            }).catch(error => {
+              console.log(error)
+            })
+          }).catch(error => {
+          console.log(error)
+        })
+      },
+      relogPsw () {
+        this.dialog = false
+        this.$store.dispatch('clearDataFromStore')
+        this.userType = null
+        this.userLogged = false
+        localStorage.clear()
+        router.push('/Home')
+      },
     },
   }
 </script>
