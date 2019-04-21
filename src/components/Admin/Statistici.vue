@@ -1,10 +1,10 @@
 <template>
-  <v-layout column>
-    <v-container fluid grid-list-md>
-      <v-layout row wrap>
+  <v-layout>
+    <v-container grid-list-xl align-content-center>
+      <v-layout align-center row wrap v-bind="binding">
 
 <!-- RAPORT: Toti utilizatorii -->
-        <v-flex xs12>
+        <v-flex xs12 d-flex>
           <v-card>
             <v-card-title>
               Toți utilizatorii
@@ -39,7 +39,7 @@
         </v-flex>
 
 <!-- RAPORT: Top utilizatori activi -->
-        <v-flex xs4>
+        <v-flex xs12>
           <v-card>
             <v-card-title>
               Top fotografi
@@ -61,16 +61,16 @@
           </v-card>
         </v-flex>
       <!-- STATISTICA: Numar poze pe categorii -->
-        <!-- <v-flex xs6>
+        <v-flex xs12>
           <v-card>
             <v-card-title>
               Numar total de poze pe categorii
             </v-card-title>
             <v-card-text>
-              <div id="piechart1"></div>
+              <div id="piechart1" style="width: 600px; height: 300px;"></div>
             </v-card-text>
           </v-card>
-        </v-flex> -->
+        </v-flex>
 
       </v-layout>
     </v-container>
@@ -100,10 +100,30 @@ export default {
   },
   mounted () {
     this.userdetails()
-    // this.piechart1()
-    this.numarPozeCategorii()
-    this.readPortofolios()
+    this.piechart1()
+    // this.numarPozeCategorii()
+    // this.readPortofolios()
   },
+  computed:{
+    binding () {
+      const binding = {}
+
+      if (this.$vuetify.breakpoint.mdAndUp) binding.column = true
+
+      return binding
+    },
+    arrayOfPortofolios(){
+      return this.$store.getters.arrayPortofolios
+    },
+    numarPozeCategorii(){
+      let tags = {}
+      this.arrayOfPortofolios.forEach(item =>{
+        tags[item.tag] = (tags[item.tag] || 0) + 1
+      })
+      return tags
+    },
+  },
+
   methods: {
     userdetails () {
       return firebase.database().ref('clienti')
@@ -126,48 +146,6 @@ export default {
       })
     },
     
-    readPortofolios() {
-          firebase.database().ref('portofoliu').on('value', snap => {
-            const keys = Object.keys(snap.val())
-            let myObj = snap.val()
-            let portofolios = []
-            keys.forEach(key => {
-              portofolios.push(myObj[key])
-              console.log(portofolios)
-            })
-          })
-        },
-
-    numarPozeCategorii () {
-      return firebase.database().ref('portofoliu')
-      .on('value', snap => {
-        const topSearch = []
-        const numbers = []
-        const myObj2 = snap.val()
-        console.log(myObj2)
-        var keysUsers = Object.keys(snap.val())
-        keysUsers.forEach(key => {
-          console.log(Object.keys(myObj2[key]))
-          numbers.push(Object.keys(myObj[key].tags).length)
-          if(Object.keys(myObj[key].Collaborations).length === 0) {
-            this.usersWithoutCollab = +this.usersWithoutCollab + 1
-          } else {
-            this.usersWithCollab = +this.usersWithCollab + 1
-          }
-        })
-        for(var i = 0; i < 3; i ++) {
-          if(numbers.length == 0) console.log('e gol')
-            if(Math.max(...numbers) !== 0) {
-            var a = numbers.indexOf(Math.max(...numbers))
-            topSearch.push(keysUsers[a])
-            numbers[a] = 0
-            }
-          }
-        this.topusersCollab = topSearch
-      }, function (error) {
-        console.log('Error: ' + error.message)
-      })
-    }
     // piechart1 () {
     //   var colors = ['#9c5463', '#7b4c67', '#c86060', '#5e4469', '#7f4c66','#b25a62']
     //   google.charts.load('visualization', '1.0',
@@ -175,11 +153,42 @@ export default {
     //     var chart = new window.google.visualization.PieChart(document.getElementById('piechart1'))
     //     chart.draw(window.google.visualization.arrayToDataTable([
     //       ['Tip', 'Numar'],
-    //       ['Cu Colaborări', this.usersWithCollab],
-    //       ['Fără Colaborări', this.usersWithoutCollab]
+    //       ['Botez', this.numarPozeCategorii['botez']],
+    //       ['Nunta', this.numarPozeCategorii['nunta']],
+    //       ['Produse', this.numarPozeCategorii['produse']],
+    //       ['Evenimente', this.numarPozeCategorii['evenimente']],
+    //       ['Locatii', this.numarPozeCategorii['locatie']]
     //     ]), { is3D: false, colors: ['#f86c5c', colors[Math.floor(Math.random() * colors.length)]] })
     //  }})
-    // }
+    // },
+
+     piechart1 () {
+       var chart1 = this.numarPozeCategorii['botez']
+       console.log(chart1)
+       var chart2 = this.numarPozeCategorii['nunta']
+       var chart3 = this.numarPozeCategorii['produse']
+       var chart4 = this.numarPozeCategorii['evenimente']
+       var chart5 = this.numarPozeCategorii['locatie']
+      var colors = ['#9c5463', '#7b4c67', '#c86060', '#5e4469', '#7f4c66','#b25a62']
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+         ['Tip', 'Numar'],
+        ['Botez', chart1],
+        ['Nunta', chart2],
+        ['Produse', chart3],
+        ['Evenimente', chart4],
+        ['Locatii', chart5]
+        ]);
+        var options = {
+          title: 'My Daily Activities'
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+        chart.draw(data, options);
+      }
+    }
+
   }
 }
 </script>
