@@ -306,11 +306,15 @@ import router from '@/router'
             dataEnd: this.dataFinal,
             idClient: this.user.id,
             idFotograf: this.id,
-            status: 'pending'
-          }).then(ceva => {
+            status: 'pending',
+            idCerere: true
+          }).then((snap) => {
+            firebase.database().ref('rezervari/'+ snap.key).update({
+              idCerere: snap.key
+            })
             this.dialogTime = false
             this.cereriTrimise.push(this.id)
-          })
+        })
     },
     verifyIfSelected(denumire) {
       return this.photographers.map(e => e.denumire).indexOf(denumire) !== -1
