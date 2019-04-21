@@ -162,6 +162,6 @@ export default new Vuex.Store({
     bookingsDetails: state => state.bookingsDetails,
     user: state => state.user,
     rezervari: state => state.rezervari,
-    arrayOfPortofolios: state => state.arrayOfPortofolios
+    arrayPortofolios: state => state.arrayPortofolios
   }
 })
