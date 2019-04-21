@@ -69,7 +69,7 @@
             </router-link>
           </v-list-tile>
           <v-list-tile v-if="user.type === 'photo'">
-            <router-link to="/CereriAcceptateDecline" tag="li" style="cursor:pointer">
+            <router-link to="/CereriAcceptDecline" tag="li" style="cursor:pointer">
               <v-list-tile-title>Cereri</v-list-tile-title>
             </router-link>
           </v-list-tile>
