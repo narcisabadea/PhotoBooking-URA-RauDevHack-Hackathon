@@ -17,7 +17,7 @@
       <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
         Sign up
       </v-btn>
-      <v-btn flat class="white--text"  router to = "/Test" v-if="user.type || user.type !== 'admin'">
+      <v-btn flat class="white--text"  router to = "/Test" v-if="user.type && user.type === 'client'">
         Test
       </v-btn>
       <v-menu offset-y v-if="user.type === 'admin'">
@@ -357,7 +357,7 @@ export default {
           }).then(ceva => {
             this.dialogSignUp = false
             this.dialogLogIn = true
-          }).birthday.then((snap) => {
+          }).then((snap) => {
             firebase.database().ref('fotografi/'+ snap.key).update({
           idFotograf: snap.key,
         })})
@@ -373,13 +373,12 @@ export default {
             dataNastere: this.formSignUp.birthday,
             sex: this.sex,
             idClient: 'test'
-          }).then(ceva => {
-            this.dialogSignUp = false
-            this.dialogLogIn = true
-          }).birthday.then((snap) => {
+          }).then((snap) => {
             firebase.database().ref('clienti/'+ snap.key).update({
           idClient: snap.key,
         })})
+      this.dialogSignUp = false
+      this.dialogLogIn = true
       }
     },
     forgotPassword () {
