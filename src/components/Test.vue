@@ -76,11 +76,9 @@
 </template>
 
 <script>
-  import * as firebase from "firebase";
   export default {
     data () {
       return {
-      dataPortofolio: [],
       selectedTag: null,
       availableTags: ['nunta','botez','evenimente','produse','locatie'],
       count: 3,
@@ -104,6 +102,9 @@
     }
   },
   computed: {
+    dataPortofolio() {
+      return this.$store.getters.arrayPortofolios
+    },
     filteredItems () {
       return this.dataPortofolio.filter(item => {
         if (this.selectedTag === '') {
@@ -112,10 +113,8 @@
           return item.tag === this.selectedTag
         }
       })
-    },
-    dataPortofolio() {
-      this.$store.getters.arrayOfPortofolios
     }
+
   },
   methods: {
     verifyIfSelected(denumire) {
@@ -146,48 +145,22 @@
       this.selectedPhotographers =  x.filter((obj, pos, arr) => {
         return arr.map(mapObj => mapObj['idFotograf']).indexOf(obj['idFotograf']) === pos;
       })
-      this.selectedPhotographers.sort()
-      for(var j = 0; j < 3; j ++) {
-        if(allDest.length == 0) console.log('e gol')
-        var modeMap = {}
-        var maxEl = allDest[0], maxCount = 1
-        for(var i = 0; i < allDest.length; i++)
-          {
-            var el = allDest[i]
-            if(modeMap[el] == null)
-              modeMap[el] = 1
-            else
-              modeMap[el]++
-            if(modeMap[el] > maxCount)
-            {
-              maxEl = el
-              maxCount = modeMap[el]
-            }
-          }
-          for(var i = 0; i < allDest.length; i++)
-          {
-            if(maxEl.localeCompare(allDest[i]) == 0) {
-              allDest.splice(i,maxCount)
-            }
-          }
-        this.topDestination.push(maxEl)
-      }
     }
   }
 }
 </script>
 
 <style>
-    .hoverShadow{
-      margin: 5px;
-    }
-    .hoverShadow:hover {
-      -ms-transform: scale(1.01); /* IE 9 */
-      -webkit-transform: scale(1.05); /* Safari 3-8 */
-      transform: scale(1.05); 
-    }
-    .lightbox {
-        box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
-      }
+  .hoverShadow{
+    margin: 5px;
+  }
+  .hoverShadow:hover {
+    -ms-transform: scale(1.01); /* IE 9 */
+    -webkit-transform: scale(1.05); /* Safari 3-8 */
+    transform: scale(1.05); 
+  }
+  .lightbox {
+    box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
+  }
 </style>
