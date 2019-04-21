@@ -6,7 +6,7 @@
         <router-link :to="'/Home'">
         <v-toolbar-title class="white--text">
           <span class="text-uppercase">rau</span>
-          <span class="font-weight-light">DevHack</span>
+          <span class="font-weight-light">DevHack - PPM</span>
         </v-toolbar-title>
       </router-link>
       </v-toolbar-title>
