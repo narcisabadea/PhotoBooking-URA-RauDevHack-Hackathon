@@ -3,7 +3,7 @@
     <v-layout align-center justify-space-around row>
       <v-data-table
         :headers="headers"
-        :items="items"
+        :items="getBookingsForPhoto"
         item-key="name"
         class="elevation-1">
         <template slot="headerCell" slot-scope="props">
@@ -74,11 +74,40 @@ export default {
           text: '', value: 'actions'
         }
       ],
-      indexes: null
+      indexes: null,
+      data: []
     }
   },
-
+  computed: {
+    bookingDetails() {
+      return this.$store.getters.bookingsDetails
+    },
+    user() {
+      return this.$store.getters.user
+    },
+    getBookingsForPhoto() {
+      let detalii = []
+      this.bookingDetails.forEach(element => {
+        if (element.idFotograf === this.user.id) {
+          detalii.push(element)
+        }
+      });
+      // console.log(detalii)
+      return detalii
+    }
+  },
   methods: {
+    getPhotographersData() {
+      let x = []
+      this.$store.getters.photographersDetails.filter(item => { 
+        this.getBookingsForPhoto.forEach(photographer => {
+          if (photographer.idFotograf === item.idFotograf) {
+            x.push(item)
+          }
+        })
+      })
+      this.data = x
+    },
     aprove (value) {
       this.$store.dispatch('approveRequest', {
         idRezervare: value,
