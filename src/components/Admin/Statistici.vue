@@ -9,7 +9,7 @@
             <v-card-title>
               Toți utilizatorii
             </v-card-title>
-            <v-card-text>
+            <!-- <v-card-text> -->
               <v-data-table
                 :headers="headers"
                 :items="items"
@@ -34,12 +34,12 @@
                   <td class="text-xs-left">{{ props.item.telefon }}</td>
                 </template>
               </v-data-table>
-            </v-card-text>
+            <!-- </v-card-text> -->
           </v-card>
         </v-flex>
 
 <!-- RAPORT: Top utilizatori activi -->
-        <v-flex xs12>
+        <!-- <v-flex xs12>
           <v-card>
             <v-card-title>
               Top fotografi
@@ -59,7 +59,7 @@
               </v-card>
             </v-card-text>
           </v-card>
-        </v-flex>
+        </v-flex> -->
       <!-- STATISTICA: Numar poze pe categorii -->
         <v-flex xs12>
           <v-card>
@@ -181,7 +181,7 @@ export default {
         ['Locatii', chart5]
         ]);
         var options = {
-          title: 'My Daily Activities'
+          title: 'Poze per categorii'
         };
         var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
         chart.draw(data, options);
