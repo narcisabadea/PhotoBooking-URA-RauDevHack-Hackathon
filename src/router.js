@@ -3,13 +3,10 @@ import Router from 'vue-router'
 import App from '@/App'
 import Home from '@/components/Home'
 import Test from '@/components/Test'
-import CalendarAcceptate from '@/components/Fotograf/CalendarAcceptate'
 import CereriAcceptDecline from '@/components/Fotograf/CereriAcceptDecline'
-import Istoric from '@/components/Fotograf/Istoric'
 import ProfilFotograf from '@/components/Fotograf/ProfilFotograf'
 import ProfilClient from '@/components/Client/ProfilClient'
 import Favoriti from '@/components/Client/Favoriti'
-import ListeUseriFotografi from '@/components/Admin/ListeUseriFotografi'
 import Statistici from '@/components/Admin/Statistici'
 import CereriTrimise from '@/components/Client/CereriTrimise'
 
@@ -30,19 +27,9 @@ export default new Router({
         component: Home
       },
       {
-        path: '/CalendarAcceptate',
-        name: 'CalendarAcceptate',
-        component: CalendarAcceptate
-      },
-      {
         path: '/CereriAcceptDecline',
         name: 'CereriAcceptDecline',
         component: CereriAcceptDecline
-      },
-      {
-        path: '/Istoric',
-        name: 'Istoric',
-        component: Istoric
       },
       {
         path: '/ProfilFotograf',
@@ -58,11 +45,6 @@ export default new Router({
         path: '/Favoriti',
         name: 'Favoriti',
         component: Favoriti
-      },
-      {
-        path: '/ListeUseriFotografi',
-        name: 'ListeUseriFotografi',
-        component: ListeUseriFotografi
       },
       {
         path: '/CereriTrimise',

@@ -17,26 +17,19 @@
       <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
         Sign up
       </v-btn>
-      <v-btn flat class="white--text"  router to = "/Test">
+      <v-btn flat class="white--text"  router to = "/Test" v-if="user.type || user.type !== 'admin'">
         Test
       </v-btn>
-      <v-menu offset-y v-if="userType === 'admin'">
+      <v-menu offset-y v-if="user.type === 'admin'">
         <v-btn
           flat
           slot="activator">
-        <v-badge color="red"  class="white--text">
-          <v-icon left >pie_chart</v-icon>Dashboard
-        </v-badge>
+          <v-badge color="red"  class="white--text">
+            <v-icon left >pie_chart</v-icon>Statistici
+          </v-badge>
         </v-btn>
-        <v-list>
-          <v-list-tile>
-            <router-link to="/Requests" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Requests </v-list-tile-title>
-            </router-link>
-          </v-list-tile>
-        </v-list>
       </v-menu>
-      <v-menu offset-y v-if="logout">
+      <v-menu offset-y v-if="logout && user.type !== 'admin'">
         <v-btn
           flat
           slot="activator">
@@ -64,18 +57,8 @@
             </router-link>
           </v-list-tile>
           <v-list-tile v-if="user.type === 'photo'">
-            <router-link to="/CalendarAcceptate" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Calendar</v-list-tile-title>
-            </router-link>
-          </v-list-tile>
-          <v-list-tile v-if="user.type === 'photo'">
             <router-link to="/CereriAcceptDecline" tag="li" style="cursor:pointer">
               <v-list-tile-title>Cereri</v-list-tile-title>
-            </router-link>
-          </v-list-tile>
-          <v-list-tile v-if="user.type === 'photo'">
-            <router-link to="/Istoric" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Istoric</v-list-tile-title>
             </router-link>
           </v-list-tile>
         </v-list>
@@ -290,7 +273,12 @@ export default {
       dialogSignUp: false,
       errorLogin: null,
       errorSignUp: null,
-      rules: null
+      rules: null,
+      admin: {
+        email: 'admin',
+        parola: 'admin'
+      },
+      errorLogin: null
     }
   },
 // functii ce se apeleaza de fiecare data cand o valoare din interior se modifica. Numele functiei se poate utiliza si pe post de variabila daca aceasta 'return'-eaza
@@ -327,7 +315,11 @@ export default {
 // functii ce se apeleaza la cerere
   methods: {
     userSign (email, password) {
-      if (this.formSignIn.switch === true) {
+      if (this.formSignIn.email === 'admin@rau.ro' && this.formSignIn.password === 'admin') {
+        this.$store.dispatch('loginUser', {type: 'admin', id: 'admin'})
+        this.dialogLogIn = false
+        router.push('/Statistici')
+      } else if (this.formSignIn.switch === true) {
         let details = this.$store.getters.photographersDetails
         details.forEach(element => {
           if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
@@ -417,64 +409,6 @@ export default {
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {
-    // - DATABASE
-
-    // read from firebase
-    // firebase.database().ref('test').on('value', snapshot => {
-    //   console.log(snapshot.val())
-    // })
-
-    // get authenticated user ID
-    // var userId = firebase.auth().currentUser.uid;
-
-    // add with specific id in database
-    // firebase.database().ref('test/' + specificID).set({
-    //   username: name
-    // })
-
-    // update value in database
-    // firebase.database().ref('way to value').update({ variable: 'newValue'})
-
-    // - AUTEHNTICATION
-
-    // create new user withoud any data
-    // firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
-    //   var errorCode = error.code
-    //   var errorMessage = error.message
-    // })
-
-    // create user with signUp form who have more data
-    // firebase.auth().createUserWithEmailAndPassword(email, password)
-    //   .then(user => {
-    //     firebase.database().ref('Users/' + firebase.auth().currentUser.uid).set({
-    //       Name: 'name',
-    //       Phone: 'phone',
-    //       Email: 'email'
-    //     })
-    //     }
-    //   )
-    //   .catch(
-    //     error => {
-    //       window.alert(error)
-    //     }
-    //   )
-
-    // verify if user still logged in
-    // firebase.auth().onAuthStateChanged(user => {
-    //   doSomethingIfUserStillExist
-    // })
-
-    // sign in function
-    // firebase.auth().signInWithEmailAndPassword(email, password).catch(error => {
-    //   var errorCode = error.code
-    //   var errorMessage = error.message
-    // })
-
-    //sign out function
-    // firebase.auth().signOut().then(() => {
-    //   }).catch(error => {
-    // })
-
   }
 }
 </script>

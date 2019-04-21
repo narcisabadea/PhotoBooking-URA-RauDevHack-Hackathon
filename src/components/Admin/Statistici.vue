@@ -164,7 +164,6 @@ export default {
 
      piechart1 () {
        var chart1 = this.numarPozeCategorii['botez']
-       console.log(chart1)
        var chart2 = this.numarPozeCategorii['nunta']
        var chart3 = this.numarPozeCategorii['produse']
        var chart4 = this.numarPozeCategorii['evenimente']
