@@ -143,7 +143,7 @@
       <v-container fluid grid-list-xl>
         <v-layout align-center justify-space-around row>
           <v-flex xs12 md4>
-            <v-card class="elevation-0 transparent">
+            <v-card class="elevation-0 transparent" style="width:320px;">
               <v-card-text class="text-xs-center">
                 <v-icon x-large color="indigo darken-1">add_circle</v-icon>
               </v-card-text>
