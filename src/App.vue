@@ -46,11 +46,11 @@
               <v-list-tile-title>Detalii cont</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-list-tile v-if="user.type === 'client'">
+          <!-- <v-list-tile v-if="user.type === 'client'">
             <router-link to="/Favoriti" tag="li" style="cursor:pointer">
               <v-list-tile-title>Fotografi favoriti</v-list-tile-title>
             </router-link>
-          </v-list-tile>
+          </v-list-tile> -->
           <v-list-tile v-if="user.type === 'client'">
             <router-link to="/CereriTrimise" tag="li" style="cursor:pointer">
               <v-list-tile-title>Cereri trimise</v-list-tile-title>
