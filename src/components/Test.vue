@@ -76,7 +76,6 @@
 </template>
 
 <script>
-  import * as firebase from "firebase";
   export default {
     data () {
       return {
@@ -152,16 +151,16 @@
 </script>
 
 <style>
-    .hoverShadow{
-      margin: 5px;
-    }
-    .hoverShadow:hover {
-      -ms-transform: scale(1.01); /* IE 9 */
-      -webkit-transform: scale(1.05); /* Safari 3-8 */
-      transform: scale(1.05); 
-    }
-    .lightbox {
-        box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
-      }
+  .hoverShadow{
+    margin: 5px;
+  }
+  .hoverShadow:hover {
+    -ms-transform: scale(1.01); /* IE 9 */
+    -webkit-transform: scale(1.05); /* Safari 3-8 */
+    transform: scale(1.05); 
+  }
+  .lightbox {
+    box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
+  }
 </style>

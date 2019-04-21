@@ -3,8 +3,12 @@
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
     <v-toolbar app class="primary" flat>
       <v-toolbar-title class="headline">
-        <span class="text-uppercase">rau</span>
-        <span class="font-weight-light">DevHack</span>
+        <router-link :to="'/Home'">
+        <v-toolbar-title class="white--text">
+          <span class="text-uppercase">rau</span>
+          <span class="font-weight-light">DevHack</span>
+        </v-toolbar-title>
+      </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="!logout" class="white--text">
