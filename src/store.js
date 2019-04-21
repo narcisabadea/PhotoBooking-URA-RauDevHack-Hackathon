@@ -16,7 +16,7 @@ export default new Vuex.Store({
     bookingsDetails: null,
     user: null,
     rezervari: 'pending',
-    portofoliosData: null
+    arrayPortofolios: null
   },
 // helps you modify 'state' data
   mutations: {
@@ -35,9 +35,10 @@ export default new Vuex.Store({
     setUser(state, payload) {
       state.user = payload
     },
-    setPortofoliosData(state, payload) {
-      state.portofoliosData = payload
+    arrayOfPortofolios(state, payload) {
+      state.arrayPortofolios = payload
     }
+   
   },
    
     // example: payload => data that come from actions
@@ -46,6 +47,26 @@ export default new Vuex.Store({
     //   }
 // functions that are called in other components in order to modify data from state
   actions: {
+    getArrayOfPortofoloos({commit}) {
+      let dataPortofolio = []
+      firebase.database().ref('portofoliu/').on('value', snap => {
+        let obj = snap.val()
+        const keys = Object.keys(obj)
+        keys.forEach(key => {
+          let object = obj[key]
+          const objKeys = Object.keys(object)
+          objKeys.forEach(val => {
+            dataPortofolio.push({
+              denumire: object[val].denumire,
+              galerie: val,
+              fotograf: key,
+              tag: object[val].tags
+            })
+          })
+        })
+      })
+      commit('arrayOfPortofolios', dataPortofolio)
+    },
     readUsers({commit}) {
       firebase.database().ref('clienti/').on('value', snap => {
         const keys = Object.keys(snap.val())
@@ -130,9 +151,6 @@ export default new Vuex.Store({
         firebase.database().ref('rezervari/' + payload.itemId).update({
           status: 'approved'
         })
-      },
-      getPortofoliosData ({commit}, payload) {
-        commit('setPortofoliosData', payload)
       }
   },
 // helps you get data from this document wherever you need it
@@ -144,6 +162,6 @@ export default new Vuex.Store({
     bookingsDetails: state => state.bookingsDetails,
     user: state => state.user,
     rezervari: state => state.rezervari,
-    portofoliosData: state => state.portofoliosData
+    arrayOfPortofolios: state => state.arrayOfPortofolios
   }
 })

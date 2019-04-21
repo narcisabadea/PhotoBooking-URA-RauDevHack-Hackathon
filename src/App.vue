@@ -409,6 +409,7 @@ export default {
     this.$store.dispatch('readPortofolios')
     this.$store.dispatch('readBookings')
     this.$store.dispatch('verifyUserLogged')
+    this.$store.dispatch('getArrayOfPortofoloos')
   },
 // LIFECYCLE: functie ce se apeleaza in timpul construirii DOM-ului
   mounted() {
