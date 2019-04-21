@@ -106,7 +106,6 @@ export default {
       this.data = x
     },
     aprove (value) {
-      console.log(value)
       firebase.database().ref('rezervari/'+ value).update({
         status: 'approved'
       })

@@ -60,7 +60,7 @@
             <td class="text-xs-left">{{ props.item.email }}</td>
             <td class="text-xs-left">{{ props.item.telefon }}</td>
             <td class="text-xs-left">
-              <v-btn flat small class="primary">
+              <v-btn flat small class="primary" v-if="cereriTrimise.indexOf(props.item.idFotograf) === -1" @click="verificaUser(props.item.idFotograf)">
                 Contacteaza fotograful
               </v-btn>
             </td>
@@ -72,14 +72,136 @@
         </div>
       </v-card>
     </v-flex>
+
+  <v-dialog v-model="dialogTime" class="dialog">
+    <v-container fluid grid-list-xl>
+      <v-layout align-center justify-space-around row>
+        <v-flex xs12 md4>
+          <v-card class="elevation-0 transparent">
+            <v-card-text class="text-xs-center">
+              <v-icon x-large color="indigo darken-1">add_circle</v-icon>
+            </v-card-text>
+            <v-card-text>
+               <v-menu
+                ref="menu"
+                :close-on-content-click="false"
+                v-model="menu"
+                :nudge-right="40"
+                :return-value.sync="dataStart"
+                lazy
+                transition="scale-transition"
+                offset-y
+                required
+                full-width
+                min-width="290px"
+              >
+                <v-text-field
+                  slot="activator"
+                  v-model="dataStart"
+                  readonly
+                  label="Data start"
+                ></v-text-field>
+                <v-date-picker v-model="dataStart" no-title scrollable>
+                  <v-btn flat color="primary" @click="$refs.menu.save(dataStart)">OK</v-btn>
+                </v-date-picker>
+              </v-menu>
+              <v-menu
+                ref="menu1"
+                :close-on-content-click="false"
+                v-model="menu1"
+                :nudge-right="40"
+                :return-value.sync="dataFinal"
+                lazy
+                transition="scale-transition"
+                offset-y
+                required
+                full-width
+                min-width="290px"
+              >
+                <v-text-field
+                  slot="activator"
+                  v-model="dataFinal"
+                  readonly
+                  label="Data final"
+                ></v-text-field>
+                <v-date-picker v-model="dataFinal" no-title scrollable>
+                  <v-btn flat color="primary" @click="$refs.menu1.save(dataFinal)">OK</v-btn>
+                </v-date-picker>
+              </v-menu>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn type="submit" @click="trimiteCerere()" color="white--text" class="gradient"> Trimite cerere
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-dialog>
+    <v-dialog v-model="dialogLogIn" class="dialog">
+      <v-container fluid grid-list-xl>
+        <v-layout align-center justify-space-around row>
+          <v-flex xs12 md3>
+            <v-card class="elevation-0 transparent">
+              <v-card-text class="text-xs-center">
+                <v-icon x-large color="indigo darken-1">account_circle</v-icon>
+              </v-card-text>
+              <v-card-text>
+                <v-text-field
+                  v-model="formSignIn.email"
+                  required
+                  :rules="rules.emailRules"
+                  label="Adresa de email">
+                </v-text-field>
+                <v-text-field
+                  v-model="formSignIn.password"
+                  label="Parola"
+                  required
+                  :append-icon="show ? 'visibility_off' : 'visibility'"
+                  :type="show ? 'text' : 'password'"
+                  @click:append="show = !show">
+                </v-text-field>
+                <v-switch
+                  :v-model="true"
+                  :label="'Sunt fotograf'"
+                  :disabled="true"
+                ></v-switch>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn flat color="indigo darken-1" type="submit" @click="forgotPassword()"> Am uitat parola
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn type="submit" @click="userSign" color="white--text" class="gradient" :disabled="!verifyFormErrorsSignIn"> Intra in cont
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+            <v-alert
+              :value="true"
+              type="error"
+              v-if="errorLogin !== null"
+            >
+              {{errorLogin}}
+            </v-alert>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-dialog>
   </v-layout>
 </template>
 
 <script>
+import * as firebase from "firebase";
+import formRules from '@/components/formRules'
+import router from '@/router'
   export default {
     data () {
       return {
+      dataStart: null,
+      dataFinal: null,
       selectedTag: null,
+      menu: false,
+      menu1: false,
       availableTags: ['nunta','botez','evenimente','produse','locatie'],
       count: 3,
       photographers: [],
@@ -98,7 +220,18 @@
         {
           text: '', value: 'actions'
         }
-      ]
+      ],
+      formSignIn: {
+        email: '',
+        password: '',
+        switch: false
+      },
+      id: null,
+      cereriTrimise: [],
+      dialogLogIn: false,
+      errorLogin: null,
+      dialogTime: false,
+      show: false
     }
   },
   computed: {
@@ -113,10 +246,72 @@
           return item.tag === this.selectedTag
         }
       })
+    },
+    user() {
+      return this.$store.getters.user
+    },
+    verifyFormErrorsSignIn () {
+      return this.formSignIn.password.length > 3 && /.+@.+/.test(this.formSignIn.email)
     }
-
+  },
+  created () {
+    this.rules = formRules
   },
   methods: {
+    seteazaDate(idFotograf) {
+      this.trimiteCerere(idFotograf)
+    },
+    userSign () {
+      if (this.formSignIn.email === 'admin@rau.ro' && this.formSignIn.password === 'admin') {
+        this.$store.dispatch('loginUser', {type: 'admin', id: 'admin'})
+        this.dialogLogIn = false
+        router.push('/Statistici')
+      } else if (this.formSignIn.switch === true) {
+        let details = this.$store.getters.photographersDetails
+        details.forEach(element => {
+          if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
+            this.$store.dispatch('loginUser', {type: 'photo', id: element.idFotograf })
+            this.dialogLogIn = false
+            this.dialogTime = true
+          } else {
+            this.errorLogin = 'Date invalide'
+          }
+        });
+      } else {
+        let details = this.$store.getters.usersDetails
+        details.forEach(element => {
+          if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
+            this.$store.dispatch('loginUser', {type: 'client', id: element.idClient})
+            this.dialogLogIn = false
+            this.dialogTime = true
+          } else {
+            this.errorLogin = 'Date invalide'
+          }
+        });
+      }
+    },
+    verificaUser(idFotograf) {
+      if (this.user && this.user.id) {
+        this.dialogTime = true
+        this.id = idFotograf
+      } else {
+        this.dialogLogIn = true
+      }
+    },
+    trimiteCerere(idFotograf) {
+      firebase.database().ref('rezervari/')
+          .push({
+            dataInregistrare: new Date(),
+            dataStart: this.dataStart,
+            dataEnd: this.dataFinal,
+            idClient: this.user.id,
+            idFotograf: this.id,
+            status: 'pending'
+          }).then(ceva => {
+            this.dialogTime = false
+            this.cereriTrimise.push(this.id)
+          })
+    },
     verifyIfSelected(denumire) {
       return this.photographers.map(e => e.denumire).indexOf(denumire) !== -1
     },
@@ -135,7 +330,6 @@
     getPhotographersData() {
       let x = []
       this.$store.getters.photographersDetails.filter(item => { 
-        // console.log(item)
         this.photographers.forEach(photographer => {
           if (photographer.idFotograf === item.idFotograf) {
             x.push(item)
