@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import * as firebase from "firebase";
+import firebase from "firebase";
 export default {
     data () {
     return {

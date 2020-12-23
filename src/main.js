@@ -1,24 +1,21 @@
 import Vue from 'vue'
-import './plugins/vuetify'
-import router from '@/router'
-import store from '@/store'
-import * as firebase from '@/firebase'
-import Vuex from 'vuex'
 import App from './App.vue'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import vuetify from './plugins/vuetify';
+import router from './router'
+import * as firebase from './firebase'
+import store from './store'
 
-Vue.use(Vuetify, {
+Vue.use(vuetify, {
   theme: {
     primary: '#f7971e'
   }
 })
-Vue.use(Vuex)
 Vue.config.productionTip = false
 
 new Vue({
+  vuetify,
+  store: store,
   router,
   firebase,
-  store,
-  render: h => h(App),
+  render: h => h(App)
 }).$mount('#app')

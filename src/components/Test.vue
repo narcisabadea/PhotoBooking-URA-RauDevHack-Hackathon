@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import * as firebase from "firebase";
+import firebase from "firebase";
 import formRules from '@/components/formRules'
 import router from '@/router'
   export default {
@@ -298,7 +298,7 @@ import router from '@/router'
         this.dialogLogIn = true
       }
     },
-    trimiteCerere(idFotograf) {
+    trimiteCerere() {
       firebase.database().ref('rezervari/')
           .push({
             dataInregistrare: new Date(),

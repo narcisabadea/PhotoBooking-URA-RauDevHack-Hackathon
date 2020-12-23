@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
-    <v-toolbar app class="primary" flat>
+    <!-- <v-toolbar app class="primary" flat>
       <v-toolbar-title class="headline">
         <router-link :to="'/Home'">
         <v-toolbar-title class="white--text">
@@ -45,13 +45,13 @@
             <router-link to="/ProfilFotograf" tag="li" style="cursor:pointer">
               <v-list-tile-title>Detalii cont</v-list-tile-title>
             </router-link>
-          </v-list-tile>
+          </v-list-tile> -->
           <!-- <v-list-tile v-if="user.type === 'client'">
             <router-link to="/Favoriti" tag="li" style="cursor:pointer">
               <v-list-tile-title>Fotografi favoriti</v-list-tile-title>
             </router-link>
           </v-list-tile> -->
-          <v-list-tile v-if="user.type === 'client'">
+          <!-- <v-list-tile v-if="user.type === 'client'">
             <router-link to="/CereriTrimise" tag="li" style="cursor:pointer">
               <v-list-tile-title>Cereri trimise</v-list-tile-title>
             </router-link>
@@ -66,13 +66,13 @@
       <v-btn @click="signOut()" flat v-if="logout" class="white--text">
         Logout
       </v-btn>
-    </v-toolbar>
+    </v-toolbar> -->
 
     <!-- continutul paginii  -->
-    <v-content>
+    <v-main>
       <!-- componenta se va modifica de fiecare data cand se intra pe alta ruta din 'router' -->
       <router-view></router-view>
-    </v-content>
+    </v-main>
 
      <v-dialog v-model="dialogLogIn" class="dialog">
       <v-container fluid grid-list-xl>
@@ -239,7 +239,7 @@
 /* eslint-disable */
 import formRules from '@/components/formRules'
 import router from '@/router'
-import * as firebase from "firebase";
+import firebase from "firebase";
 export default {
   name: 'App',
   data () {
