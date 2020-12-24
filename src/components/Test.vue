@@ -192,7 +192,7 @@
 
 <script>
 import firebase from "firebase";
-import formRules from '@/components/formRules'
+import rules from '@/components/formRules'
 import router from '@/router'
   export default {
     data () {
@@ -255,7 +255,7 @@ import router from '@/router'
     }
   },
   created () {
-    this.rules = formRules
+    this.rules = rules
   },
   methods: {
     seteazaDate(idFotograf) {

@@ -8,8 +8,9 @@ var config = {
     databaseURL: "https://raudevhack.firebaseio.com",
     projectId: "raudevhack",
     storageBucket: "raudevhack.appspot.com",
-    messagingSenderId: "433771662326"
-}
+    messagingSenderId: "433771662326",  
+    appId: "1:433771662326:web:530805e5112e3328dad5d7"
+  };
 
 const firebaseApp = firebase.initializeApp(config)
 

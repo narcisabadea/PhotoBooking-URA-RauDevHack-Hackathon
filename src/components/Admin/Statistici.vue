@@ -100,7 +100,7 @@ export default {
   },
   mounted () {
     this.userdetails()
-    this.piechart1()
+    // this.piechart1()
     // this.numarPozeCategorii()
     // this.readPortofolios()
   },
@@ -162,31 +162,31 @@ export default {
     //  }})
     // },
 
-     piechart1 () {
-       var chart1 = this.numarPozeCategorii['botez']
-       var chart2 = this.numarPozeCategorii['nunta']
-       var chart3 = this.numarPozeCategorii['produse']
-       var chart4 = this.numarPozeCategorii['evenimente']
-       var chart5 = this.numarPozeCategorii['locatie']
-      var colors = ['#9c5463', '#7b4c67', '#c86060', '#5e4469', '#7f4c66','#b25a62']
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-         ['Tip', 'Numar'],
-        ['Botez', chart1],
-        ['Nunta', chart2],
-        ['Produse', chart3],
-        ['Evenimente', chart4],
-        ['Locatii', chart5]
-        ]);
-        var options = {
-          title: 'Poze per categorii'
-        };
-        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
-        chart.draw(data, options);
-      }
-    }
+    //  piechart1 () {
+    //    var chart1 = this.numarPozeCategorii['botez']
+    //    var chart2 = this.numarPozeCategorii['nunta']
+    //    var chart3 = this.numarPozeCategorii['produse']
+    //    var chart4 = this.numarPozeCategorii['evenimente']
+    //    var chart5 = this.numarPozeCategorii['locatie']
+    //   var colors = ['#9c5463', '#7b4c67', '#c86060', '#5e4469', '#7f4c66','#b25a62']
+    //   google.charts.load('current', {'packages':['corechart']});
+    //   google.charts.setOnLoadCallback(drawChart);
+    //   function drawChart() {
+    //     var data = google.visualization.arrayToDataTable([
+    //      ['Tip', 'Numar'],
+    //     ['Botez', chart1],
+    //     ['Nunta', chart2],
+    //     ['Produse', chart3],
+    //     ['Evenimente', chart4],
+    //     ['Locatii', chart5]
+    //     ]);
+    //     var options = {
+    //       title: 'Poze per categorii'
+    //     };
+    //     var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+    //     chart.draw(data, options);
+    //   }
+    // }
 
   }
 }

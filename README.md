@@ -1,4 +1,4 @@
-# my-app
+# PhotoBooking
 
 ## Project setup
 ```
