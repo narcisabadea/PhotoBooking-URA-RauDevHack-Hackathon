@@ -32,7 +32,7 @@
         class="white--text"
         router
         to="/Test"
-        v-if="user && user.type && user.type === 'client'"
+        v-if="user"
       >
         Test
       </v-btn>
