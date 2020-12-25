@@ -88,7 +88,6 @@
                 v-model="menu"
                 :nudge-right="40"
                 :return-value.sync="dataStart"
-                lazy
                 transition="scale-transition"
                 offset-y
                 required
@@ -111,7 +110,6 @@
                 v-model="menu1"
                 :nudge-right="40"
                 :return-value.sync="dataFinal"
-                lazy
                 transition="scale-transition"
                 offset-y
                 required
@@ -193,7 +191,6 @@
 <script>
 import firebase from "firebase";
 import rules from '@/components/formRules'
-import router from '@/router'
   export default {
     data () {
       return {
@@ -262,11 +259,7 @@ import router from '@/router'
       this.trimiteCerere(idFotograf)
     },
     userSign () {
-      if (this.formSignIn.email === 'admin@rau.ro' && this.formSignIn.password === 'admin') {
-        this.$store.dispatch('loginUser', {type: 'admin', id: 'admin'})
-        this.dialogLogIn = false
-        router.push('/Statistici')
-      } else if (this.formSignIn.switch === true) {
+      if (this.formSignIn.switch === true) {
         let details = this.$store.getters.photographersDetails
         details.forEach(element => {
           if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {

@@ -4,73 +4,78 @@
     <v-app-bar class="primary">
       <div class="headline">
         <router-link :to="'/Home'">
-        <div class="white--text">
-          <span class="text-uppercase">rau</span>
-          <span class="font-weight-light">DevHack - PPM</span>
-        </div>
-      </router-link>
+          <div class="white--text">
+            <span class="text-uppercase">rau</span>
+            <span class="font-weight-light">DevHack - PPM</span>
+          </div>
+        </router-link>
       </div>
       <v-spacer></v-spacer>
-      <v-btn @click="dialogLogIn = !dialogLogIn" text v-if="!logout" class="white--text">
+      <v-btn
+        @click="dialogLogIn = !dialogLogIn"
+        text
+        v-if="!logout"
+        class="white--text"
+      >
         Login
       </v-btn>
-      <v-btn @click="dialogSignUp = !dialogSignUp" text v-if="!logout" class="white--text">
+      <v-btn
+        @click="dialogSignUp = !dialogSignUp"
+        text
+        v-if="!logout"
+        class="white--text"
+      >
         Sign up
       </v-btn>
-      <v-btn text class="white--text"  router to = "/Test" v-if="user && user.type && user.type === 'client'">
+      <v-btn
+        text
+        class="white--text"
+        router
+        to="/Test"
+        v-if="user && user.type && user.type === 'client'"
+      >
         Test
       </v-btn>
-      <v-menu offset-y v-if="user && user.type === 'admin'">
-        <v-btn
-          text
-          slot="activator">
-          <v-badge color="red"  class="white--text">
-            <v-icon left >pie_chart</v-icon>Statistici
-          </v-badge>
-        </v-btn>
-      </v-menu>
-      <v-menu offset-y v-if="logout && user && user.type !== 'admin'">
-        <v-btn
-          text
-          slot="activator">
-          <v-icon left  class="white--text">account_circle</v-icon><div  class="white--text">Cont</div>
-        </v-btn>
+      <v-menu offset-y v-if="user">
+        <template v-slot:activator="{ attrs, on }">
+          <v-btn class="white--text ma-5" v-bind="attrs" v-on="on">
+            <div>Cont</div>
+          </v-btn>
+        </template>
+
         <v-list>
-          <v-list-tile v-if="user && user.type === 'client'">
-            <router-link to="/ProfilClient" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Detalii cont</v-list-tile-title>
+          <div v-if="user && user.type === 'client'">
+            <router-link to="/ProfilClient" style="cursor:pointer">
+              <div>Detalii cont</div>
             </router-link>
-          </v-list-tile>
-          <v-list-tile v-if="user && user.type === 'photo'">
-            <router-link to="/ProfilFotograf" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Detalii cont</v-list-tile-title>
+          </div>
+          <div v-if="user && user.type === 'photo'">
+            <router-link to="/ProfilFotograf" style="cursor:pointer">
+              <div>Detalii cont</div>
             </router-link>
-          </v-list-tile>
-    <!-- <v-list-tile v-if="user && user.type === 'client'">
-            <router-link to="/Favoriti" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Fotografi favoriti</v-list-tile-title>
+          </div>
+          <div v-if="user && user.type === 'client'">
+            <router-link to="/CereriTrimise" style="cursor:pointer">
+              <div>Cereri trimise</div>
             </router-link>
-          </v-list-tile> -->
-    <v-list-tile v-if="user && user.type === 'client'">
-            <router-link to="/CereriTrimise" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Cereri trimise</v-list-tile-title>
+          </div>
+          <div v-if="user && user.type === 'photo'">
+            <router-link
+              to="/CereriAcceptDecline"
+              style="cursor:pointer"
+            >
+              <div>Cereri</div>
             </router-link>
-          </v-list-tile>
-          <v-list-tile v-if="user && user.type === 'photo'">
-            <router-link to="/CereriAcceptDecline" tag="li" style="cursor:pointer">
-              <v-list-tile-title>Cereri</v-list-tile-title>
-            </router-link>
-          </v-list-tile>
+          </div>
         </v-list>
       </v-menu>
+
       <v-btn @click="signOut()" text v-if="logout" class="white--text">
         Logout
       </v-btn>
     </v-app-bar>
 
-    <!-- continutul paginii  -->
     <v-main>
-      <!-- componenta se va modifica de fiecare data cand se intra pe alta ruta din 'router' -->
       <router-view></router-view>
     </v-main>
 
@@ -143,11 +148,7 @@
               </v-card-text>
               <v-card-text>
                 <!-- :rules="rules.nameRules" -->
-                <v-text-field
-                  v-model="formSignUp.name"
-                  required
-                  label="Nume"
-                >
+                <v-text-field v-model="formSignUp.name" required label="Nume">
                   Nume
                   <!-- :rules="rules.nameRules" -->
                 </v-text-field>
@@ -164,7 +165,6 @@
                   v-model="menu"
                   :nudge-right="40"
                   :return-value.sync="formSignUp.birthday"
-                  lazy
                   transition="scale-transition"
                   offset-y
                   required
@@ -172,7 +172,6 @@
                   min-width="290px"
                 >
                   <v-text-field
-                    slot="activator"
                     v-model="formSignUp.birthday"
                     readonly
                     label="Data nasterii"
@@ -309,10 +308,6 @@ export default {
       errorLogin: null,
       errorSignUp: null,
       rules: null,
-      admin: {
-        email: "admin",
-        parola: "admin",
-      },
       errorLogin: null,
     };
   },
@@ -356,22 +351,11 @@ export default {
         ? "Parolele nu coincid"
         : false;
     },
-    // example:
-    // userDetails () {
-    //   return this.$store.getters.userDetails
-    // }
   },
   // functii ce se apeleaza la cerere
   methods: {
     userSign(email, password) {
-      if (
-        this.formSignIn.email === "admin@rau.ro" &&
-        this.formSignIn.password === "admin"
-      ) {
-        this.$store.dispatch("loginUser", { type: "admin", id: "admin" });
-        this.dialogLogIn = false;
-        router.push("/Statistici");
-      } else if (this.formSignIn.switch === true) {
+      if (this.formSignIn.switch === true) {
         let details = this.$store.getters.photographersDetails;
         details.forEach((element) => {
           if (
