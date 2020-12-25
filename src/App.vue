@@ -11,18 +11,18 @@
       </router-link>
       </div>
       <v-spacer></v-spacer>
-      <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="!logout" class="white--text">
+      <v-btn @click="dialogLogIn = !dialogLogIn" text v-if="!logout" class="white--text">
         Login
       </v-btn>
-      <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
+      <v-btn @click="dialogSignUp = !dialogSignUp" text v-if="!logout" class="white--text">
         Sign up
       </v-btn>
-      <v-btn flat class="white--text"  router to = "/Test" v-if="user && user.type && user.type === 'client'">
+      <v-btn text class="white--text"  router to = "/Test" v-if="user && user.type && user.type === 'client'">
         Test
       </v-btn>
       <v-menu offset-y v-if="user && user.type === 'admin'">
         <v-btn
-          flat
+          text
           slot="activator">
           <v-badge color="red"  class="white--text">
             <v-icon left >pie_chart</v-icon>Statistici
@@ -31,7 +31,7 @@
       </v-menu>
       <v-menu offset-y v-if="logout && user && user.type !== 'admin'">
         <v-btn
-          flat
+          text
           slot="activator">
           <v-icon left  class="white--text">account_circle</v-icon><div  class="white--text">Cont</div>
         </v-btn>
@@ -63,7 +63,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-btn @click="signOut()" flat v-if="logout" class="white--text">
+      <v-btn @click="signOut()" text v-if="logout" class="white--text">
         Logout
       </v-btn>
     </v-app-bar>
@@ -106,7 +106,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn
-                  flat
+                  text
                   color="indigo darken-1"
                   type="submit"
                   @click="forgotPassword()"
@@ -183,7 +183,7 @@
                     scrollable
                   >
                     <v-btn
-                      flat
+                      text
                       color="primary"
                       @click="$refs.menu.save(formSignUp.birthday)"
                       >OK</v-btn
@@ -462,18 +462,20 @@ export default {
     },
     forgotPassword() {
       const adresaEmail = prompt("Introduceti adresa de email", "");
-      firebase
-        .auth()
-        .sendPasswordResetEmail(adresaEmail)
-        .then(function() {
-          window.alert(
-            "Un email de recuperare a parolei a fost trimis pe adresa: " +
-              adresaEmail
-          );
-        })
-        .catch((error) => {
-          window.alert(error.message);
-        });
+      if (adresaEmail) {
+        firebase
+          .auth()
+          .sendPasswordResetEmail(adresaEmail)
+          .then(function() {
+            window.alert(
+              "Un email de recuperare a parolei a fost trimis pe adresa: " +
+                adresaEmail
+            );
+          })
+          .catch((error) => {
+            window.alert(error.message);
+          });
+      }
     },
     signOut() {
       this.$store.dispatch("loginUser", { type: null });

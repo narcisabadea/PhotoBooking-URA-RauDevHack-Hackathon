@@ -19,7 +19,7 @@
           <v-container grid-list-sm fluid>
             <v-layout align-start justify-center row wrap>
               <v-flex xs3 v-for="(data, index) in filteredItems" :key="index" @click="addPhotographerId(data.fotograf, data.denumire)">
-                <v-card flat class="hoverShadow">
+                <v-card text class="hoverShadow">
                   <v-img :aspect-ratio="1" 
                   :src="data.denumire"
                   height="13rem" width="13rem" contain >
@@ -60,7 +60,7 @@
             <td class="text-xs-left">{{ props.item.email }}</td>
             <td class="text-xs-left">{{ props.item.telefon }}</td>
             <td class="text-xs-left">
-              <v-btn flat small class="primary" v-if="cereriTrimise.indexOf(props.item.idFotograf) === -1" @click="verificaUser(props.item.idFotograf)">
+              <v-btn text small class="primary" v-if="cereriTrimise.indexOf(props.item.idFotograf) === -1" @click="verificaUser(props.item.idFotograf)">
                 Contacteaza fotograful
               </v-btn>
             </td>
@@ -102,7 +102,7 @@
                   label="Data start"
                 ></v-text-field>
                 <v-date-picker v-model="dataStart" no-title scrollable>
-                  <v-btn flat color="primary" @click="$refs.menu.save(dataStart)">OK</v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(dataStart)">OK</v-btn>
                 </v-date-picker>
               </v-menu>
               <v-menu
@@ -125,7 +125,7 @@
                   label="Data final"
                 ></v-text-field>
                 <v-date-picker v-model="dataFinal" no-title scrollable>
-                  <v-btn flat color="primary" @click="$refs.menu1.save(dataFinal)">OK</v-btn>
+                  <v-btn text color="primary" @click="$refs.menu1.save(dataFinal)">OK</v-btn>
                 </v-date-picker>
               </v-menu>
             </v-card-text>
@@ -169,7 +169,7 @@
                 ></v-switch>
               </v-card-text>
               <v-card-actions>
-                <v-btn flat color="indigo darken-1" type="submit" @click="forgotPassword()"> Am uitat parola
+                <v-btn text color="indigo darken-1" type="submit" @click="forgotPassword()"> Am uitat parola
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn type="submit" @click="userSign" color="white--text" class="gradient" :disabled="!verifyFormErrorsSignIn"> Intra in cont

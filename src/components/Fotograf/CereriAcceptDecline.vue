@@ -25,10 +25,10 @@
                              'orange--text': props.item.status === 'declined'
                             }">{{ props.item.status}}</td>
           <td v-if="props.item.status === 'pending'">
-            <v-btn flat small color="green" @click="aprove(props.item.idCerere)">
+            <v-btn text small color="green" @click="aprove(props.item.idCerere)">
               Aproba cerere
             </v-btn>
-            <v-btn flat small color="orange" @click="decline(props.item.idCerere)">
+            <v-btn text small color="orange" @click="decline(props.item.idCerere)">
               Respinge cerere
             </v-btn>
           </td>

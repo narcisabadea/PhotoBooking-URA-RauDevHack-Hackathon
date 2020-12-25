@@ -67,29 +67,29 @@
             <v-layout align-center justify-space-around row fill-height>
               <div v-if="changeDetails === false" @click="(changeDetails = true) && (disabledDetails = false)">
                 <v-tooltip bottom>
-                  <v-icon flat slot="activator" dark color="primary">edit</v-icon>
+                  <v-icon text slot="activator" dark color="primary">edit</v-icon>
                   <span>Editeaza detaliile</span>
                 </v-tooltip>
               </div>
 
               <div v-if="changeDetails === true" @click="saveDetails()">
               <v-tooltip bottom>
-                <v-icon flat slot="activator" dark color="primary">check_circle</v-icon>
+                <v-icon text slot="activator" dark color="primary">check_circle</v-icon>
                 <span>Salveaza detaliile</span>
               </v-tooltip>
               </div>
 
               <v-tooltip bottom>
-                <v-icon @click="dialogEmail = true" flat slot="activator" dark color="primary">email</v-icon>
+                <v-icon @click="dialogEmail = true" text slot="activator" dark color="primary">email</v-icon>
                 <span>Schimba adresa de email</span>
               </v-tooltip>
 
               <v-tooltip bottom>
-                <v-icon @click="dialog = true" flat slot="activator" dark color="primary">lock</v-icon>
+                <v-icon @click="dialog = true" text slot="activator" dark color="primary">lock</v-icon>
                 <span>Schimba parola</span>
               </v-tooltip>
 
-              <v-btn flat color="primary" router to = "/home">Inapoi</v-btn>
+              <v-btn text color="primary" router to = "/home">Inapoi</v-btn>
             </v-layout>
 
             <v-dialog v-model="dialogEmail" width="400">
@@ -115,7 +115,7 @@
                   <v-spacer></v-spacer>
                   <v-btn
                     color="primary"
-                    flat
+                    text
                     @click="updateEmail()"
                   >
                     Salveaza
@@ -165,7 +165,7 @@
                   <v-spacer></v-spacer>
                   <v-btn
                     color="primary"
-                    flat
+                    text
                     @click="updatePassword()"
                   >
                     Salveaza
