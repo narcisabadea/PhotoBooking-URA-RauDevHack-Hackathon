@@ -112,22 +112,10 @@ export default new Vuex.Store({
         });
     },
     readBookings({ commit }) {
-      console.log('readBookings')
-
-      firebase.database().ref('rezervari')
-      .on('value', snap => {
-          console.log(snap.val())
-      })
-
-      firebase.database().ref("rezervari").on('value', snap => console.log(snap))
-
-
-
       firebase
         .database()
         .ref("rezervari")
         .on("value", (snap) => {
-          console.log('snap',snap)
           const keys = Object.keys(snap.val());
           let myObj = snap.val();
           let bookings = [];
