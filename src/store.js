@@ -73,7 +73,6 @@ export default new Vuex.Store({
         .database()
         .ref("clienti/")
         .on("value", (snap) => {
-          console.log(snap);
           const keys = Object.keys(snap.val());
           let myObj = snap.val();
           let users = [];

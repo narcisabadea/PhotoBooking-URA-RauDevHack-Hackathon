@@ -85,11 +85,11 @@ export default {
     },
     getBookingsForPhoto() {
       let detalii = []
-      // this.bookingDetails.forEach(element => {
-      //   if (element.idFotograf === this.user.id) {
-      //     detalii.push(element)
-      //   }
-      // });
+      this.bookingDetails.forEach(element => {
+        if (element.idFotograf === this.user.id) {
+          detalii.push(element)
+        }
+      });
       return detalii
     }
   },

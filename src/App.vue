@@ -1,15 +1,15 @@
 <template>
   <v-app>
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
-    <!-- <v-toolbar app class="primary" flat>
-      <v-toolbar-title class="headline">
+    <v-app-bar class="primary">
+      <div class="headline">
         <router-link :to="'/Home'">
-        <v-toolbar-title class="white--text">
+        <div class="white--text">
           <span class="text-uppercase">rau</span>
           <span class="font-weight-light">DevHack - PPM</span>
-        </v-toolbar-title>
+        </div>
       </router-link>
-      </v-toolbar-title>
+      </div>
       <v-spacer></v-spacer>
       <v-btn @click="dialogLogIn = !dialogLogIn" flat v-if="!logout" class="white--text">
         Login
@@ -17,10 +17,10 @@
       <v-btn @click="dialogSignUp = !dialogSignUp" flat v-if="!logout" class="white--text">
         Sign up
       </v-btn>
-      <v-btn flat class="white--text"  router to = "/Test" v-if="user.type && user.type === 'client'">
+      <v-btn flat class="white--text"  router to = "/Test" v-if="user && user.type && user.type === 'client'">
         Test
       </v-btn>
-      <v-menu offset-y v-if="user.type === 'admin'">
+      <v-menu offset-y v-if="user && user.type === 'admin'">
         <v-btn
           flat
           slot="activator">
@@ -29,34 +29,34 @@
           </v-badge>
         </v-btn>
       </v-menu>
-      <v-menu offset-y v-if="logout && user.type !== 'admin'">
+      <v-menu offset-y v-if="logout && user && user.type !== 'admin'">
         <v-btn
           flat
           slot="activator">
           <v-icon left  class="white--text">account_circle</v-icon><div  class="white--text">Cont</div>
         </v-btn>
         <v-list>
-          <v-list-tile v-if="user.type === 'client'">
+          <v-list-tile v-if="user && user.type === 'client'">
             <router-link to="/ProfilClient" tag="li" style="cursor:pointer">
               <v-list-tile-title>Detalii cont</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-list-tile v-if="user.type === 'photo'">
+          <v-list-tile v-if="user && user.type === 'photo'">
             <router-link to="/ProfilFotograf" tag="li" style="cursor:pointer">
               <v-list-tile-title>Detalii cont</v-list-tile-title>
             </router-link>
-          </v-list-tile> -->
-    <!-- <v-list-tile v-if="user.type === 'client'">
+          </v-list-tile>
+    <!-- <v-list-tile v-if="user && user.type === 'client'">
             <router-link to="/Favoriti" tag="li" style="cursor:pointer">
               <v-list-tile-title>Fotografi favoriti</v-list-tile-title>
             </router-link>
           </v-list-tile> -->
-    <!-- <v-list-tile v-if="user.type === 'client'">
+    <v-list-tile v-if="user && user.type === 'client'">
             <router-link to="/CereriTrimise" tag="li" style="cursor:pointer">
               <v-list-tile-title>Cereri trimise</v-list-tile-title>
             </router-link>
           </v-list-tile>
-          <v-list-tile v-if="user.type === 'photo'">
+          <v-list-tile v-if="user && user.type === 'photo'">
             <router-link to="/CereriAcceptDecline" tag="li" style="cursor:pointer">
               <v-list-tile-title>Cereri</v-list-tile-title>
             </router-link>
@@ -66,7 +66,7 @@
       <v-btn @click="signOut()" flat v-if="logout" class="white--text">
         Logout
       </v-btn>
-    </v-toolbar> -->
+    </v-app-bar>
 
     <!-- continutul paginii  -->
     <v-main>
