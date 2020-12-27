@@ -25,25 +25,23 @@
           <div class="icons-list">
             <div
               v-for="tag in availableTags"
-              :key="tag"
+              :key="tag.name"
               class="icons"
               v-bind:class="{
-                selectedIcon: tag === selectedTag,
-                unselectedIcon: tag != selectedTag,
+                selectedIcon: tag.value === selectedTag,
+                unselectedIcon: tag.value != selectedTag,
               }"
-              @click="selectedTag = tag"
+              @click="selectedTag = tag.value"
             >
-            <i :class="tag.icon"></i>
-
-<!-- 
               <v-icon
                 x-large
                 v-bind:class="{
-                  selectedIcon: tag === selectedTag,
-                  unselectedIcon: tag != selectedTag,
+                  selectedIcon: tag.value === selectedTag,
+                  unselectedIcon: tag.value != selectedTag,
                 }"
-                >{{ tag.icon }}</v-icon -->
-              
+                >{{ tag.icon }}</v-icon
+              >
+
               {{ tag.name }}
             </div>
           </div>
@@ -65,6 +63,7 @@
             >
               <v-img
                 :aspect-ratio="1"
+                alt="../assets/unavailable.jpg"
                 v-bind:class="{ selected: verifyIfSelected(data.denumire) }"
                 :src="data.denumire"
                 cover
@@ -81,42 +80,43 @@
 
         <v-stepper-content step="3">
           We recommend you:
-          <v-data-table
-            :headers="headers"
-            :items="selectedPhotographers"
-            item-key="name"
-            class="elevation-1"
-          >
-            <template slot="headerCell" slot-scope="props">
-              <v-tooltip bottom>
-                <span slot="activator">
-                  {{ props.header.text }}
-                </span>
-                <span>
-                  {{ props.header.text }}
-                </span>
-              </v-tooltip>
+
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    Name
+                  </th>
+                  <th class="text-left">
+                    Email
+                  </th>
+                  <th class="text-left">
+                    Phone
+                  </th>
+                  <th class="text-left"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in selectedPhotographers" :key="item.prenume">
+                  <td>{{ item.prenume }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.telefon }}</td>
+                  <td>
+                    <v-btn
+                      text
+                      small
+                      class="primary"
+                      v-if="cereriTrimise.indexOf(item.idFotograf) === -1"
+                      @click="verificaUser(item.idFotograf)"
+                    >
+                      Contacteaza fotograful
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
             </template>
-            <template slot="items" slot-scope="props">
-              <td class="text-xs-left">
-                {{ props.item.nume }} {{ props.item.prenume }}
-              </td>
-              <td class="text-xs-left">{{ props.item.email }}</td>
-              <td class="text-xs-left">{{ props.item.telefon }}</td>
-              <td class="text-xs-left">
-                <v-btn
-                  text
-                  small
-                  class="primary"
-                  v-if="cereriTrimise.indexOf(props.item.idFotograf) === -1"
-                  @click="verificaUser(props.item.idFotograf)"
-                >
-                  Contacteaza fotograful
-                </v-btn>
-              </td>
-              <td></td>
-            </template>
-          </v-data-table>
+          </v-simple-table>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -126,74 +126,70 @@
         <v-layout align-center justify-space-around row>
           <v-flex xs12 md4>
             <v-card class="elevation-0 transparent">
-              <v-card-text class="text-xs-center">
-                <v-icon x-large color="indigo darken-1">add_circle</v-icon>
-              </v-card-text>
-              <v-card-text>
-                <v-menu
-                  ref="menu"
-                  :close-on-content-click="false"
-                  v-model="menu"
-                  :nudge-right="40"
-                  :return-value.sync="dataStart"
-                  transition="scale-transition"
-                  offset-y
-                  required
-                  full-width
-                  min-width="290px"
-                >
+              <v-icon x-large color="indigo darken-1">add_circle</v-icon>
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="dataStart"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    slot="activator"
                     v-model="dataStart"
+                    label="Picker in menu"
+                    prepend-icon="mdi-calendar"
                     readonly
-                    label="Data start"
+                    v-bind="attrs"
+                    v-on="on"
                   ></v-text-field>
-                  <v-date-picker v-model="dataStart" no-title scrollable>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.menu.save(dataStart)"
-                      >OK</v-btn
-                    >
-                  </v-date-picker>
-                </v-menu>
-                <v-menu
-                  ref="menu1"
-                  :close-on-content-click="false"
-                  v-model="menu1"
-                  :nudge-right="40"
-                  :return-value.sync="dataFinal"
-                  transition="scale-transition"
-                  offset-y
-                  required
-                  full-width
-                  min-width="290px"
-                >
+                </template>
+                <v-date-picker v-model="dataStart" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="menu = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn @click="$refs.menu.save(dataStart)">
+                    Save
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="dataFinal"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    slot="activator"
                     v-model="dataFinal"
+                    label="Picker in menu"
+                    prepend-icon="mdi-calendar"
                     readonly
-                    label="Data final"
+                    v-bind="attrs"
+                    v-on="on"
                   ></v-text-field>
-                  <v-date-picker v-model="dataFinal" no-title scrollable>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.menu1.save(dataFinal)"
-                      >OK</v-btn
-                    >
-                  </v-date-picker>
-                </v-menu>
-              </v-card-text>
+                </template>
+                <v-date-picker v-model="dataFinal" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="menu = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn @click="$refs.menu.save(dataFinal)">
+                    Save
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
+
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  type="submit"
-                  @click="trimiteCerere()"
-                  color="white--text"
-                  class="gradient"
-                >
-                  Trimite cerere
+                <v-btn @click="trimiteCerere()">
+                  Send request
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -208,6 +204,7 @@
 import firebase from "firebase";
 import rules from "@/components/formRules";
 export default {
+  name: "Test",
   data() {
     return {
       dataStart: null,
@@ -219,23 +216,28 @@ export default {
       availableTags: [
         {
           name: "Wedding",
-          icon: "x",
+          icon: "mdi-flower",
+          value: "nunta",
         },
         {
-          name: "Showers",
-          icon: "fas fa-baby",
+          name: "Baby showers",
+          icon: "mdi-baby-carriage",
+          value: "botez",
         },
         {
           name: "Events",
-          icon: "groups",
+          icon: "mdi-calendar-check",
+          value: "evenimente",
         },
         {
           name: "Products",
-          icon: "x",
+          icon: "mdi-glass-cocktail",
+          value: "produse",
         },
         {
           name: "Locations",
-          icon: "x",
+          icon: "mdi-map-marker",
+          value: "locatie",
         },
       ],
       count: 3,
@@ -279,11 +281,9 @@ export default {
     },
     filteredItems() {
       return this.dataPortofolio.filter((item) => {
-        if (this.selectedTag === "") {
-          return true;
-        } else {
-          return item.tag === this.selectedTag;
-        }
+        return this.selectedTag
+          ? item.tag.toLowerCase() === this.selectedTag.toLowerCase()
+          : true;
       });
     },
     user() {
@@ -373,7 +373,7 @@ export default {
 }
 .icons {
   display: flex;
-  cursor:pointer;
+  cursor: pointer;
   flex-flow: column;
   margin: 10px;
 }
