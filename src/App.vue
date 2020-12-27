@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
-    <v-app-bar app class="primary">
+    <v-app-bar app>
       <div class="headline">
         <router-link :to="'/Home'">
           <div class="white--text">
-            <span class="text-uppercase">rau</span>
-            <span class="font-weight-light">DevHack - PPM</span>
+            <span class="text-uppercase yellow-text">Photo</span>
+            <span class="font-weight-light">Booking</span>
           </div>
         </router-link>
       </div>
@@ -21,24 +21,16 @@
       </v-btn>
       <v-btn
         @click="dialogSignUp = !dialogSignUp"
-        text
         v-if="!logout"
-        class="white--text"
       >
         Sign up
       </v-btn>
-      <v-btn
-        text
-        class="white--text"
-        router
-        to="/Test"
-        v-if="user"
-      >
+      <v-btn router to="/Test" v-if="user">
         Test
       </v-btn>
       <v-menu offset-y v-if="user">
         <template v-slot:activator="{ attrs, on }">
-          <v-btn class="white--text ma-5" v-bind="attrs" v-on="on">
+          <v-btn v-bind="attrs" v-on="on">
             <div>Cont</div>
           </v-btn>
         </template>
@@ -60,17 +52,14 @@
             </router-link>
           </div>
           <div v-if="user && user.type === 'photo'">
-            <router-link
-              to="/CereriAcceptDecline"
-              style="cursor:pointer"
-            >
+            <router-link to="/CereriAcceptDecline" style="cursor:pointer">
               <div>Cereri</div>
             </router-link>
           </div>
         </v-list>
       </v-menu>
 
-      <v-btn @click="signOut()" text v-if="logout" class="white--text">
+      <v-btn @click="signOut()" v-if="logout" text>
         Logout
       </v-btn>
     </v-app-bar>
@@ -123,7 +112,6 @@
                   type="submit"
                   @click="userSign"
                   color="white--text"
-                  class="gradient"
                   :disabled="!verifyFormErrorsSignIn"
                 >
                   Intra in cont
@@ -252,7 +240,6 @@
                   type="submit"
                   @click="newAccount()"
                   color="white--text"
-                  class="gradient"
                   :disabled="!verifyFormErrorsSignUp"
                 >
                   Creeaza cont nou
@@ -485,30 +472,41 @@ export default {
 </script>
 
 <style>
-a {
+:root {
+  --yellow: #ffd53d;
+  --aquamarine: #40b0df;
+  --blue-grotto: #0067b3;
+  --blue: #0000a3;
+  --white: #f8f9f9;
+  --box-shadow: 0 8px 24px rgba(64, 87, 109, 0.07);
+  --gray-text: rgba(17, 23, 29, 0.6);
+  --black-text: #0e1318;
+  --border-radius: 8px;
+}
+.v-application--wrap {
+  background-color: var(--white);
+  color: var(--black-text);
+}
+.v-btn {
+  background-color: var(--yellow) !important;
+  margin: 3px;
+}
+.v-btn--text {
+  background-color: transparent !important;
+}
+.v-btn--text .v-btn__content {
+  color: var(--white) !important;
+}
+.v-btn .v-btn__content {
+  color: var(--blue-grotto);
+}
+.theme--light.v-app-bar.v-toolbar.v-sheet {
+  background-color: var(--blue-grotto) !important;
+}
+.v-application a {
   text-decoration: none;
 }
-#toolbar {
-  background-color: #8dcff4;
-}
-#bottom {
-  background-color: #8dcff4;
-  color: black;
-}
-.v-dialog {
-  background-color: white;
-}
-.flex {
-  max-width: fit-content !important;
-  flex-basis: auto;
-}
-.application {
-  background: #f5f6fa !important;
-}
-.v-dialog {
-  max-width: max-content;
-}
-.gradient {
-  background: linear-gradient(to top right, #f7971e 5%, #ffd200 100%);
+.yellow-text {
+  color: var(--yellow);
 }
 </style>
