@@ -122,80 +122,72 @@
     </v-stepper>
 
     <v-dialog v-model="dialogTime" class="dialog">
-      <v-container fluid grid-list-xl>
-        <v-layout align-center justify-space-around row>
-          <v-flex xs12 md4>
-            <v-card class="elevation-0 transparent">
-              <v-icon x-large color="indigo darken-1">add_circle</v-icon>
-              <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                :return-value.sync="dataStart"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="dataStart"
-                    label="Picker in menu"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="dataStart" no-title scrollable>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="menu = false">
-                    Cancel
-                  </v-btn>
-                  <v-btn @click="$refs.menu.save(dataStart)">
-                    Save
-                  </v-btn>
-                </v-date-picker>
-              </v-menu>
-              <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                :return-value.sync="dataFinal"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="dataFinal"
-                    label="Picker in menu"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="dataFinal" no-title scrollable>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="menu = false">
-                    Cancel
-                  </v-btn>
-                  <v-btn @click="$refs.menu.save(dataFinal)">
-                    Save
-                  </v-btn>
-                </v-date-picker>
-              </v-menu>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn @click="trimiteCerere()">
-                  Send request
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <v-card class="elevation-0">
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="dataStart"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="dataStart"
+              label="Picker in menu"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="dataStart" no-title scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text @click="menu = false">
+              Cancel
+            </v-btn>
+            <v-btn @click="$refs.menu.save(dataStart)">
+              Save
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="dataFinal"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="dataFinal"
+              label="Picker in menu"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="dataFinal" no-title scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text @click="menu = false">
+              Cancel
+            </v-btn>
+            <v-btn @click="$refs.menu.save(dataFinal)">
+              Save
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="trimiteCerere()">
+            Send request
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
@@ -407,5 +399,11 @@ export default {
   display: flex;
   flex-flow: wrap;
   justify-content: space-evenly;
+}
+.v-dialog {
+  width: 40vw;
+}
+.v-card {
+  padding: 20px;
 }
 </style>
