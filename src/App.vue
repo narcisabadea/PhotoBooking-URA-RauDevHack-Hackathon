@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- continut ce se afiseaza pe toate paginile, indiferent de continut (valabil doar in fisierul App.vue) -->
-    <v-app-bar class="primary">
+    <v-app-bar app class="primary">
       <div class="headline">
         <router-link :to="'/Home'">
           <div class="white--text">
