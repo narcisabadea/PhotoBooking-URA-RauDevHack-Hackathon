@@ -19,10 +19,7 @@
       >
         Login
       </v-btn>
-      <v-btn
-        @click="dialogSignUp = !dialogSignUp"
-        v-if="!logout"
-      >
+      <v-btn @click="dialogSignUp = !dialogSignUp" v-if="!logout">
         Sign up
       </v-btn>
       <v-btn router to="/Test" v-if="user">
@@ -68,62 +65,71 @@
       <router-view></router-view>
     </v-main>
 
-    <v-dialog v-model="dialogLogIn" class="dialog">
-      <v-container fluid grid-list-xl>
-        <v-layout align-center justify-space-around row>
-          <v-flex xs12 md3>
-            <v-card class="elevation-0 transparent">
-              <v-card-text class="text-xs-center">
-                <v-icon x-large color="indigo darken-1">account_circle</v-icon>
-              </v-card-text>
-              <v-card-text>
-                <!-- :rules="rules.emailRules" -->
-                <v-text-field
-                  v-model="formSignIn.email"
-                  required
-                  label="Adresa de email"
-                >
-                </v-text-field>
-                <v-text-field
-                  v-model="formSignIn.password"
-                  label="Parola"
-                  required
-                  :append-icon="show ? 'visibility_off' : 'visibility'"
-                  :type="show ? 'text' : 'password'"
-                  @click:append="show = !show"
-                >
-                </v-text-field>
-                <v-switch
-                  v-model="formSignIn.switch"
-                  :label="formSignIn.switch ? 'Sunt fotograf' : 'Sunt client'"
-                ></v-switch>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  text
-                  color="indigo darken-1"
-                  type="submit"
-                  @click="forgotPassword()"
-                >
-                  Am uitat parola
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn
-                  type="submit"
-                  @click="userSign"
-                  color="white--text"
-                  :disabled="!verifyFormErrorsSignIn"
-                >
-                  Intra in cont
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-            <v-alert :value="true" type="error" v-if="errorLogin !== null">
-              {{ errorLogin }}
-            </v-alert>
-          </v-flex>
-        </v-layout>
-      </v-container>
+    <v-dialog v-model="dialogLogIn" max-width="50%" hide-overlay >
+        <v-row class="container-style" >
+          <v-col cols="12" sm="6" align="center" justify="space-around">
+            <div class='img-container'>
+            <img src="./assets/login-bg.jpg" style="width: 100%; overflow: hidden" />
+            <v-btn text class="register-btn" @click='goToRegister()'>
+              Create your account &#x2192;
+            </v-btn>
+            </div>
+          </v-col>
+
+          <v-col cols="12" sm="6">
+            <div class="login-text">
+              Login
+            </div>
+            <v-card-text>
+              <v-text-field
+                v-model="formSignIn.email"
+                required
+                placeholder="Email address"
+              >
+              </v-text-field>
+              <v-text-field
+                v-model="formSignIn.password"
+                placeholder="Password"
+                required
+                :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="show ? 'text' : 'password'"
+                @click:append="show = !show"
+              >
+              </v-text-field>
+              <v-switch 
+                v-model="formSignIn.switch"
+                :label="
+                  formSignIn.switch
+                    ? 'Sign in as photographer'
+                    : 'Sign in as a customer'
+                "
+              >
+            
+              </v-switch>
+            </v-card-text>
+
+            <v-card-actions class='actions-style'>
+              <v-btn
+              class='forgot-psw-btn'
+                type="submit"
+                @click="forgotPassword()"
+              >
+                Forgot password?
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                type="submit"
+                @click="userSign"
+                :disabled="!verifyFormErrorsSignIn"
+              >
+                Login
+              </v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
+      <v-alert :value="true" type="error" v-if="errorLogin !== null">
+        {{ errorLogin }}
+      </v-alert>
     </v-dialog>
 
     <v-dialog v-model="dialogSignUp" class="dialog">
@@ -265,7 +271,6 @@ export default {
   name: "App",
   data() {
     return {
-      // example:
       formSignUp: {
         name: "",
         password2: "",
@@ -341,6 +346,10 @@ export default {
   },
   // functii ce se apeleaza la cerere
   methods: {
+    goToRegister() {
+      this.dialogSignUp = true
+      this.dialogLogIn = false
+    },
     userSign(email, password) {
       if (this.formSignIn.switch === true) {
         let details = this.$store.getters.photographersDetails;
@@ -478,7 +487,7 @@ export default {
   --blue-grotto: #0067b3;
   --blue: #0000a3;
   --white: #f8f9f9;
-  --box-shadow: 0 0px 9px 0px lightgrey;;
+  --box-shadow: 0 0px 9px 0px lightgrey;
   --gray-text: rgba(17, 23, 29, 0.6);
   --black-text: #0e1318;
   --border-radius: 8px;
@@ -512,5 +521,39 @@ export default {
 .v-btn--disabled {
   background-color: transparent !important;
   cursor: not-allowed !important;
+}
+.container-style {
+  padding: 0px;
+ background-color: var(--white);
+ overflow: hidden;
+}
+.register-btn {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.login-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 20%;
+  margin-bottom: 10%;
+  color: var(--blue-grotto);
+  margin-left: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  overflow: hidden;
+}
+.img-container {
+  position: relative;
+  text-align: center;
+  color: white;   overflow: hidden;
+}
+.actions-style {
+  margin-top: 8%
+}
+.forgot-psw-btn {
+  background-color: transparent !important;
+  box-shadow: none;
 }
 </style>
