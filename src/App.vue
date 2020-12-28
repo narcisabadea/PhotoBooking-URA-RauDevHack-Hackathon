@@ -478,7 +478,7 @@ export default {
   --blue-grotto: #0067b3;
   --blue: #0000a3;
   --white: #f8f9f9;
-  --box-shadow: 0 8px 24px rgba(64, 87, 109, 0.07);
+  --box-shadow: 0 0px 9px 0px lightgrey;;
   --gray-text: rgba(17, 23, 29, 0.6);
   --black-text: #0e1318;
   --border-radius: 8px;
@@ -508,5 +508,9 @@ export default {
 }
 .yellow-text {
   color: var(--yellow);
+}
+.v-btn--disabled {
+  background-color: transparent !important;
+  cursor: not-allowed !important;
 }
 </style>

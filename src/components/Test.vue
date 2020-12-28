@@ -1,357 +1,409 @@
 <template>
-  <v-layout align-center fill-height justify-center>
-    <v-flex xs12 sm6>
-      <v-card v-if="!selectedTag">
-        <v-card-title>
-          Alege o categorie pentru a incepe
-        </v-card-title>
-        <v-card-text>
-          <div class="text-xs-center">
-            <v-chip color="primary" text-color="white" v-for="tag in availableTags" :key="tag" @click="selectedTag = tag">{{tag}}</v-chip>
-          </div>
-        </v-card-text>
-      </v-card>
-      <v-card v-if="selectedTag">
-        <v-card-title v-if="count !== 0">
-          Alegeri ramase: {{ count }}
-        </v-card-title>
-        <v-card-text v-if="count !== 0">
-          <v-container grid-list-sm fluid>
-            <v-layout align-start justify-center row wrap>
-              <v-flex xs3 v-for="(data, index) in filteredItems" :key="index" @click="addPhotographerId(data.fotograf, data.denumire)">
-                <v-card text class="hoverShadow">
-                  <v-img :aspect-ratio="1" 
-                  :src="data.denumire"
-                  height="13rem" width="13rem" contain >
-                    <v-layout pa-2 column fill-height class="lightbox white--text" v-if="verifyIfSelected(data.denumire)">
-                      <v-spacer></v-spacer>
-                      <v-flex shrink>
-                        <div class="subheading">Selected</div>
-                      </v-flex>
-                    </v-layout>
-                  </v-img>
-                </v-card>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card-text>
-        <div  v-if="count === 0">
-          <v-card-text>
-            Conform selectarilor facute, fotografii recomandati sunt: 
-          </v-card-text>
-        <v-card-text>
-           <v-data-table
-        :headers="headers"
-        :items="selectedPhotographers"
-        item-key="name"
-        class="elevation-1">
-        <template slot="headerCell" slot-scope="props">
-          <v-tooltip bottom>
-            <span slot="activator">
-              {{ props.header.text }}
-            </span>
-            <span>
-              {{ props.header.text }}
-            </span>
-          </v-tooltip>
-        </template>
-          <template slot="items" slot-scope="props">
-            <td class="text-xs-left">{{ props.item.nume }} {{ props.item.prenume }}</td>
-            <td class="text-xs-left">{{ props.item.email }}</td>
-            <td class="text-xs-left">{{ props.item.telefon }}</td>
-            <td class="text-xs-left">
-              <v-btn text small class="primary" v-if="cereriTrimise.indexOf(props.item.idFotograf) === -1" @click="verificaUser(props.item.idFotograf)">
-                Contacteaza fotograful
-              </v-btn>
-            </td>
-            <td></td>
-          </template>
-          </v-data-table>
+  <div fill-height>
+    <v-stepper v-model="e1">
+      <v-stepper-header>
+        <v-stepper-step :complete="e1 > 1" step="1">
+          Choose a category to start
+        </v-stepper-step>
 
-        </v-card-text>
-        </div>
-      </v-card>
-    </v-flex>
+        <v-divider></v-divider>
 
-  <v-dialog v-model="dialogTime" class="dialog">
-    <v-container fluid grid-list-xl>
-      <v-layout align-center justify-space-around row>
-        <v-flex xs12 md4>
-          <v-card class="elevation-0 transparent">
-            <v-card-text class="text-xs-center">
-              <v-icon x-large color="indigo darken-1">add_circle</v-icon>
-            </v-card-text>
-            <v-card-text>
-               <v-menu
-                ref="menu"
-                :close-on-content-click="false"
-                v-model="menu"
-                :nudge-right="40"
-                :return-value.sync="dataStart"
-                transition="scale-transition"
-                offset-y
-                required
-                full-width
-                min-width="290px"
-              >
-                <v-text-field
-                  slot="activator"
-                  v-model="dataStart"
-                  readonly
-                  label="Data start"
-                ></v-text-field>
-                <v-date-picker v-model="dataStart" no-title scrollable>
-                  <v-btn text color="primary" @click="$refs.menu.save(dataStart)">OK</v-btn>
-                </v-date-picker>
-              </v-menu>
-              <v-menu
-                ref="menu1"
-                :close-on-content-click="false"
-                v-model="menu1"
-                :nudge-right="40"
-                :return-value.sync="dataFinal"
-                transition="scale-transition"
-                offset-y
-                required
-                full-width
-                min-width="290px"
-              >
-                <v-text-field
-                  slot="activator"
-                  v-model="dataFinal"
-                  readonly
-                  label="Data final"
-                ></v-text-field>
-                <v-date-picker v-model="dataFinal" no-title scrollable>
-                  <v-btn text color="primary" @click="$refs.menu1.save(dataFinal)">OK</v-btn>
-                </v-date-picker>
-              </v-menu>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn type="submit" @click="trimiteCerere()" color="white--text" class="gradient"> Trimite cerere
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-dialog>
-    <v-dialog v-model="dialogLogIn" class="dialog">
-      <v-container fluid grid-list-xl>
-        <v-layout align-center justify-space-around row>
-          <v-flex xs12 md3>
-            <v-card class="elevation-0 transparent">
-              <v-card-text class="text-xs-center">
-                <v-icon x-large color="indigo darken-1">account_circle</v-icon>
-              </v-card-text>
-              <v-card-text>
-                <v-text-field
-                  v-model="formSignIn.email"
-                  required
-                  :rules="rules.emailRules"
-                  label="Adresa de email">
-                </v-text-field>
-                <v-text-field
-                  v-model="formSignIn.password"
-                  label="Parola"
-                  required
-                  :append-icon="show ? 'visibility_off' : 'visibility'"
-                  :type="show ? 'text' : 'password'"
-                  @click:append="show = !show">
-                </v-text-field>
-                <v-switch
-                  :v-model="true"
-                  :label="'Sunt fotograf'"
-                  :disabled="true"
-                ></v-switch>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn text color="indigo darken-1" type="submit" @click="forgotPassword()"> Am uitat parola
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn type="submit" @click="userSign" color="white--text" class="gradient" :disabled="!verifyFormErrorsSignIn"> Intra in cont
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-            <v-alert
-              :value="true"
-              type="error"
-              v-if="errorLogin !== null"
+        <v-stepper-step :complete="e1 > 2" step="2">
+          Select up to 3 favourites
+          <small v-if="e1 > 1">{{ count }} left</small>
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="3">
+          See your favourites photographers
+        </v-stepper-step>
+      </v-stepper-header>
+
+      <v-stepper-items>
+        <v-stepper-content step="1">
+          <div class="icons-list">
+            <div
+              v-for="tag in availableTags"
+              :key="tag.name"
+              class="icons"
+              v-bind:class="{
+                selectedIcon: tag.value === selectedTag,
+                unselectedIcon: tag.value != selectedTag,
+              }"
+              @click="selectedTag = tag.value"
             >
-              {{errorLogin}}
-            </v-alert>
-          </v-flex>
-        </v-layout>
-      </v-container>
+              <v-icon
+                x-large
+                v-bind:class="{
+                  selectedIcon: tag.value === selectedTag,
+                  unselectedIcon: tag.value != selectedTag,
+                }"
+                >{{ tag.icon }}</v-icon
+              >
+
+              {{ tag.name }}
+            </div>
+          </div>
+
+          <div class="button-continue">
+            <v-btn @click="e1 = 2" :disabled="!selectedTag">
+              Continue
+            </v-btn>
+          </div>
+        </v-stepper-content>
+
+        <v-stepper-content step="2">
+          <v-layout wrap justify-center>
+            <v-flex
+              xs3
+              v-for="(data, index) in filteredItems"
+              :key="index"
+              @click="addPhotographerId(data.fotograf, data.denumire)"
+            >
+              <v-img
+                :aspect-ratio="1"
+                alt="../assets/unavailable.jpg"
+                v-bind:class="{ selected: verifyIfSelected(data.denumire) }"
+                :src="data.denumire"
+                cover
+                class="images"
+              />
+            </v-flex>
+          </v-layout>
+          <div class="button-continue">
+            <v-btn @click="e1 = 3" :disabled="count !== 0">
+              See results
+            </v-btn>
+          </div>
+        </v-stepper-content>
+
+        <v-stepper-content step="3">
+          We recommend you:
+
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    Name
+                  </th>
+                  <th class="text-left">
+                    Email
+                  </th>
+                  <th class="text-left">
+                    Phone
+                  </th>
+                  <th class="text-left"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in selectedPhotographers" :key="item.prenume">
+                  <td>{{ item.prenume }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.telefon }}</td>
+                  <td>
+                    <v-btn
+                      text
+                      small
+                      class="primary"
+                      v-if="cereriTrimise.indexOf(item.idFotograf) === -1"
+                      @click="verificaUser(item.idFotograf)"
+                    >
+                      Contacteaza fotograful
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-stepper-content>
+      </v-stepper-items>
+    </v-stepper>
+
+    <v-dialog v-model="dialogTime" class="dialog">
+      <v-card class="elevation-0">
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="dataStart"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="dataStart"
+              label="Picker in menu"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="dataStart" no-title scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text @click="menu = false">
+              Cancel
+            </v-btn>
+            <v-btn @click="$refs.menu.save(dataStart)">
+              Save
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="dataFinal"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="dataFinal"
+              label="Picker in menu"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="dataFinal" no-title scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text @click="menu = false">
+              Cancel
+            </v-btn>
+            <v-btn @click="$refs.menu.save(dataFinal)">
+              Save
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="trimiteCerere()">
+            Send request
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
-  </v-layout>
+  </div>
 </template>
 
 <script>
 import firebase from "firebase";
-import rules from '@/components/formRules'
-  export default {
-    data () {
-      return {
+import rules from "@/components/formRules";
+export default {
+  name: "Test",
+  data() {
+    return {
       dataStart: null,
       dataFinal: null,
+      e1: 1,
       selectedTag: null,
       menu: false,
       menu1: false,
-      availableTags: ['nunta','botez','evenimente','produse','locatie'],
+      availableTags: [
+        {
+          name: "Wedding",
+          icon: "mdi-flower",
+          value: "nunta",
+        },
+        {
+          name: "Baby showers",
+          icon: "mdi-baby-carriage",
+          value: "botez",
+        },
+        {
+          name: "Events",
+          icon: "mdi-calendar-check",
+          value: "evenimente",
+        },
+        {
+          name: "Products",
+          icon: "mdi-glass-cocktail",
+          value: "produse",
+        },
+        {
+          name: "Locations",
+          icon: "mdi-map-marker",
+          value: "locatie",
+        },
+      ],
       count: 3,
       photographers: [],
       showResult: false,
       selectedPhotographers: [],
       headers: [
         {
-          text: 'Nume', align: 'left', value: 'user'
+          text: "Nume",
+          align: "left",
+          value: "user",
         },
         {
-          text: 'Email', value: 'university'
+          text: "Email",
+          value: "university",
         },
         {
-          text: 'Telefon', value: 'details'
+          text: "Telefon",
+          value: "details",
         },
         {
-          text: '', value: 'actions'
-        }
+          text: "",
+          value: "actions",
+        },
       ],
       formSignIn: {
-        email: '',
-        password: '',
-        switch: false
+        email: "",
+        password: "",
+        switch: false,
       },
       id: null,
       cereriTrimise: [],
-      dialogLogIn: false,
       errorLogin: null,
       dialogTime: false,
-      show: false
-    }
+      show: false,
+    };
   },
   computed: {
     dataPortofolio() {
-      return this.$store.getters.arrayPortofolios
+      return this.$store.getters.arrayPortofolios;
     },
-    filteredItems () {
-      return this.dataPortofolio.filter(item => {
-        if (this.selectedTag === '') {
-          return true
-        } else {
-          return item.tag === this.selectedTag
-        }
-      })
+    filteredItems() {
+      return this.dataPortofolio.filter((item) => {
+        return this.selectedTag
+          ? item.tag.toLowerCase() === this.selectedTag.toLowerCase()
+          : true;
+      });
     },
     user() {
-      return this.$store.getters.user
+      return this.$store.getters.user;
     },
-    verifyFormErrorsSignIn () {
-      return this.formSignIn.password.length > 3 && /.+@.+/.test(this.formSignIn.email)
-    }
+    verifyFormErrorsSignIn() {
+      return (
+        this.formSignIn.password.length > 3 &&
+        /.+@.+/.test(this.formSignIn.email)
+      );
+    },
   },
-  created () {
-    this.rules = rules
+  created() {
+    this.rules = rules;
   },
   methods: {
-    seteazaDate(idFotograf) {
-      this.trimiteCerere(idFotograf)
-    },
-    userSign () {
-      if (this.formSignIn.switch === true) {
-        let details = this.$store.getters.photographersDetails
-        details.forEach(element => {
-          if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
-            this.$store.dispatch('loginUser', {type: 'photo', id: element.idFotograf })
-            this.dialogLogIn = false
-            this.dialogTime = true
-          } else {
-            this.errorLogin = 'Date invalide'
-          }
-        });
-      } else {
-        let details = this.$store.getters.usersDetails
-        details.forEach(element => {
-          if (element.email === this.formSignIn.email && element.parola === this.formSignIn.password) {
-            this.$store.dispatch('loginUser', {type: 'client', id: element.idClient})
-            this.dialogLogIn = false
-            this.dialogTime = true
-          } else {
-            this.errorLogin = 'Date invalide'
-          }
-        });
-      }
-    },
     verificaUser(idFotograf) {
-      if (this.user && this.user.id) {
-        this.dialogTime = true
-        this.id = idFotograf
-      } else {
-        this.dialogLogIn = true
-      }
+      this.dialogTime = true;
+      this.id = idFotograf;
     },
     trimiteCerere() {
-      firebase.database().ref('rezervari/')
-          .push({
-            dataInregistrare: new Date(),
-            dataStart: this.dataStart,
-            dataEnd: this.dataFinal,
-            idClient: this.user.id,
-            idFotograf: this.id,
-            status: 'pending',
-            idCerere: true
-          }).then((snap) => {
-            firebase.database().ref('rezervari/'+ snap.key).update({
-              idCerere: snap.key
-            })
-            this.dialogTime = false
-            this.cereriTrimise.push(this.id)
+      firebase
+        .database()
+        .ref("rezervari/")
+        .push({
+          dataInregistrare: new Date(),
+          dataStart: this.dataStart,
+          dataEnd: this.dataFinal,
+          idClient: this.user.id,
+          idFotograf: this.id,
+          status: "pending",
+          idCerere: true,
         })
+        .then((snap) => {
+          firebase
+            .database()
+            .ref("rezervari/" + snap.key)
+            .update({
+              idCerere: snap.key,
+            });
+          this.dialogTime = false;
+          this.cereriTrimise.push(this.id);
+        });
     },
     verifyIfSelected(denumire) {
-      return this.photographers.map(e => e.denumire).indexOf(denumire) !== -1
+      return this.photographers.map((e) => e.denumire).indexOf(denumire) !== -1;
     },
     addPhotographerId(idFotograf, denumire) {
       if (this.count === 0) {
-        this.showResult = true
-        this.getPhotographersData()
+        this.showResult = true;
+        this.getPhotographersData();
       } else {
-        this.photographers.push({idFotograf, denumire})
-        this.count = this.count - 1
+        this.photographers.push({ idFotograf, denumire });
+        this.count = this.count - 1;
         if (this.count === 0) {
-          this.getPhotographersData()
+          this.getPhotographersData();
         }
       }
     },
     getPhotographersData() {
-      let x = []
-      this.$store.getters.photographersDetails.filter(item => { 
-        this.photographers.forEach(photographer => {
+      let x = [];
+      this.$store.getters.photographersDetails.filter((item) => {
+        this.photographers.forEach((photographer) => {
           if (photographer.idFotograf === item.idFotograf) {
-            x.push(item)
+            x.push(item);
           }
-        })
-      })
-      this.selectedPhotographers =  x.filter((obj, pos, arr) => {
-        return arr.map(mapObj => mapObj['idFotograf']).indexOf(obj['idFotograf']) === pos;
-      })
-    }
-  }
-}
+        });
+      });
+      this.selectedPhotographers = x.filter((obj, pos, arr) => {
+        return (
+          arr
+            .map((mapObj) => mapObj["idFotograf"])
+            .indexOf(obj["idFotograf"]) === pos
+        );
+      });
+    },
+  },
+};
 </script>
 
 <style>
-  .hoverShadow{
-    margin: 5px;
-  }
-  .hoverShadow:hover {
-    -ms-transform: scale(1.01); /* IE 9 */
-    -webkit-transform: scale(1.05); /* Safari 3-8 */
-    transform: scale(1.05); 
-  }
-  .lightbox {
-    box-shadow: 0 0 20px inset rgba(0, 0, 0, 0.2);
-    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 72px);
-  }
+.unselectedIcon {
+  color: var(--blue-grotto) !important;
+}
+.icons:hover {
+  color: var(--yellow) !important;
+}
+.icons {
+  display: flex;
+  cursor: pointer;
+  flex-flow: column;
+  margin: 10px;
+}
+.selectedIcon {
+  color: var(--yellow) !important;
+}
+.selected {
+  border: 5px solid var(--yellow);
+}
+.images {
+  border-radius: var(--border-radius);
+  margin: 5px;
+  cursor: pointer;
+  box-shadow: var(--box-shadow);
+}
+.button-continue {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+.v-stepper {
+  box-shadow: none !important;
+  background: var(--white) !important;
+}
+.v-data-table {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin: 10px;
+}
+.icons-list {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-evenly;
+}
+.v-dialog {
+  width: 40vw;
+}
+.v-card {
+  padding: 20px;
+}
 </style>
