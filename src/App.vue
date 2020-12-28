@@ -101,7 +101,7 @@
             </v-text-field>
             <v-switch
               v-model="formSignIn.switch"
-              :placeholder="
+              :label="
                 formSignIn.switch
                   ? 'Sign in as photographer'
                   : 'Sign in as a customer'
@@ -134,7 +134,7 @@
       </v-alert>
     </v-dialog>
 
-    <v-dialog v-model="dialogSignUp" max-width="50%" scrollable>
+    <v-dialog v-model="dialogSignUp" max-width="60%" scrollable>
       <v-row class="container-style">
         <v-col cols="12" sm="6">
           <div class="img-container">
@@ -167,32 +167,7 @@
             >
               Surname
             </v-text-field>
-            <v-menu
-              ref="menu"
-              :close-on-content-click="false"
-              v-model="menu"
-              :nudge-right="40"
-              :return-value.sync="formSignUp.birthday"
-              transition="scale-transition"
-              offset-y
-              required
-              full-width
-              min-width="290px"
-            >
-              <v-text-field
-                v-model="formSignUp.birthday"
-                readonly
-                placeholder="Birthday"
-              ></v-text-field>
-              <v-date-picker v-model="formSignUp.birthday" no-title scrollable>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.menu.save(formSignUp.birthday)"
-                  >OK</v-btn
-                >
-              </v-date-picker>
-            </v-menu>
+
             <v-select
               :items="gender"
               placeholder="Gender"
@@ -299,7 +274,7 @@ export default {
       show: false,
       show1: false,
       show2: false,
-      gender: ["F", "M"],
+      gender: ["Female", "Male"],
       sex: null,
       dialogLogIn: false,
       dialogSignUp: false,
@@ -330,13 +305,13 @@ export default {
       );
     },
     verifyFormErrorsSignUp() {
+      console.log(this.formSignUp);
       return (
         this.formSignUp.password2.length > 3 &&
         /.+@.+/.test(this.formSignUp.email2) &&
         this.formSignUp.name.length > 3 &&
         this.formSignUp.surname.length > 3 &&
         this.formSignUp.sex !== null &&
-        this.formSignUp.birthday !== null &&
         this.formSignUp.password2.length > 3 &&
         this.comparePasswords !== "Passwords do not match"
       );
