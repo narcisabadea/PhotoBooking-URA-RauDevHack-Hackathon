@@ -65,199 +65,205 @@
       <router-view></router-view>
     </v-main>
 
-    <v-dialog v-model="dialogLogIn" max-width="50%" hide-overlay >
-        <v-row class="container-style" >
-          <v-col cols="12" sm="6" align="center" justify="space-around">
-            <div class='img-container'>
-            <img src="./assets/login-bg.jpg" style="width: 100%; overflow: hidden" />
-            <v-btn text class="register-btn" @click='goToRegister()'>
+    <v-dialog v-model="dialogLogIn" max-width="50%" scrollable>
+      <v-row class="container-style">
+        <v-col cols="12" sm="6" align="center" justify="space-around">
+          <div class="img-container">
+            <img
+              src="./assets/login-bg.jpg"
+              style="width: 100%; overflow: hidden"
+            />
+            <v-btn text class="register-btn" @click="goToRegister()">
               Create your account &#x2192;
             </v-btn>
-            </div>
-          </v-col>
+          </div>
+        </v-col>
 
-          <v-col cols="12" sm="6">
-            <div class="login-text">
+        <v-col cols="12" sm="6">
+          <div class="login-text">
+            Login
+          </div>
+          <v-card-text>
+            <v-text-field
+              v-model="formSignIn.email"
+              required
+              placeholder="Email address"
+            >
+            </v-text-field>
+            <v-text-field
+              v-model="formSignIn.password"
+              placeholder="Password"
+              required
+              :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="show ? 'text' : 'password'"
+              @click:append="show = !show"
+            >
+            </v-text-field>
+            <v-switch
+              v-model="formSignIn.switch"
+              :placeholder="
+                formSignIn.switch
+                  ? 'Sign in as photographer'
+                  : 'Sign in as a customer'
+              "
+            >
+            </v-switch>
+          </v-card-text>
+
+          <v-card-actions class="actions-style">
+            <v-btn
+              class="forgot-psw-btn"
+              type="submit"
+              @click="forgotPassword()"
+            >
+              Forgot password?
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              type="submit"
+              @click="userSign"
+              :disabled="!verifyFormErrorsSignIn"
+            >
               Login
-            </div>
-            <v-card-text>
-              <v-text-field
-                v-model="formSignIn.email"
-                required
-                placeholder="Email address"
-              >
-              </v-text-field>
-              <v-text-field
-                v-model="formSignIn.password"
-                placeholder="Password"
-                required
-                :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="show ? 'text' : 'password'"
-                @click:append="show = !show"
-              >
-              </v-text-field>
-              <v-switch 
-                v-model="formSignIn.switch"
-                :label="
-                  formSignIn.switch
-                    ? 'Sign in as photographer'
-                    : 'Sign in as a customer'
-                "
-              >
-            
-              </v-switch>
-            </v-card-text>
-
-            <v-card-actions class='actions-style'>
-              <v-btn
-              class='forgot-psw-btn'
-                type="submit"
-                @click="forgotPassword()"
-              >
-                Forgot password?
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                type="submit"
-                @click="userSign"
-                :disabled="!verifyFormErrorsSignIn"
-              >
-                Login
-              </v-btn>
-            </v-card-actions>
-          </v-col>
-        </v-row>
+            </v-btn>
+          </v-card-actions>
+        </v-col>
+      </v-row>
       <v-alert :value="true" type="error" v-if="errorLogin !== null">
         {{ errorLogin }}
       </v-alert>
     </v-dialog>
 
-    <v-dialog v-model="dialogSignUp" class="dialog">
-      <v-container fluid grid-list-xl>
-        <v-layout align-center justify-space-around row>
-          <v-flex xs12 md4>
-            <v-card class="elevation-0 transparent" style="width:320px;">
-              <v-card-text class="text-xs-center">
-                <v-icon x-large color="indigo darken-1">add_circle</v-icon>
-              </v-card-text>
-              <v-card-text>
-                <!-- :rules="rules.nameRules" -->
-                <v-text-field v-model="formSignUp.name" required label="Nume">
-                  Nume
-                  <!-- :rules="rules.nameRules" -->
-                </v-text-field>
-                <v-text-field
-                  v-model="formSignUp.surname"
-                  required
-                  label="Prenume"
-                >
-                  Prenume
-                </v-text-field>
-                <v-menu
-                  ref="menu"
-                  :close-on-content-click="false"
-                  v-model="menu"
-                  :nudge-right="40"
-                  :return-value.sync="formSignUp.birthday"
-                  transition="scale-transition"
-                  offset-y
-                  required
-                  full-width
-                  min-width="290px"
-                >
-                  <v-text-field
-                    v-model="formSignUp.birthday"
-                    readonly
-                    label="Data nasterii"
-                  ></v-text-field>
-                  <v-date-picker
-                    v-model="formSignUp.birthday"
-                    no-title
-                    scrollable
-                  >
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.menu.save(formSignUp.birthday)"
-                      >OK</v-btn
-                    >
-                  </v-date-picker>
-                </v-menu>
-                <v-select
-                  :items="gender"
-                  label="Sex"
-                  required
-                  v-model="formSignUp.sex"
-                ></v-select>
-                <!-- :rules="rules.emailRules" -->
-                <v-text-field
-                  v-model="formSignUp.email2"
-                  required
-                  label="Adresa de email"
-                >
-                  Email
-                </v-text-field>
-                <v-text-field
-                  v-model="formSignUp.phone"
-                  required
-                  label="Telefon"
-                >
-                  Telefon
-                </v-text-field>
-                <v-switch
-                  v-model="formSignUp.switch"
-                  :label="
-                    formSignUp.switch
-                      ? 'Ma inregistrez ca fotograf'
-                      : 'Doresc sa caut fotograf'
-                  "
-                ></v-switch>
-                <v-text-field
-                  v-model="formSignUp.password2"
-                  required
-                  :append-icon="show1 ? 'visibility_off' : 'visibility'"
-                  :type="show1 ? 'text' : 'password'"
-                  @click:append="show1 = !show1"
-                  label="Parola"
-                >
-                  Parola
-                </v-text-field>
-                <v-text-field
-                  v-model="formSignUp.passwordConfirm"
-                  required
-                  :append-icon="show2 ? 'visibility_off' : 'visibility'"
-                  :type="show2 ? 'text' : 'password'"
-                  @click:append="show2 = !show2"
-                  :rules="[comparePasswords]"
-                  label="Repeta parola"
-                >
-                  Repeta parola
-                </v-text-field>
-                <v-checkbox
-                  label="Accept prelucrarea datelor cu caracter personal"
-                  v-model="formSignUp.gdpr"
-                  required
-                >
-                </v-checkbox>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
+    <v-dialog v-model="dialogSignUp" max-width="50%" scrollable>
+      <v-row class="container-style">
+        <v-col cols="12" sm="6">
+          <div class="img-container">
+            <img
+              src="./assets/signup-bg.jpg"
+              style="height: 100%; overflow: hidden"
+            />
+            <v-btn text class="to-login-btn" @click="goToLogin()">
+              Already have an account? Login &#x2192;
+            </v-btn>
+          </div>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <div class="register-text">
+            Create an account
+          </div>
+          <v-card-text>
+            <v-text-field
+              v-model="formSignUp.name"
+              required
+              placeholder="Name"
+              class="field-style"
+            >
+              Name
+            </v-text-field>
+            <v-text-field
+              v-model="formSignUp.surname"
+              required
+              placeholder="Surname"
+            >
+              Surname
+            </v-text-field>
+            <v-menu
+              ref="menu"
+              :close-on-content-click="false"
+              v-model="menu"
+              :nudge-right="40"
+              :return-value.sync="formSignUp.birthday"
+              transition="scale-transition"
+              offset-y
+              required
+              full-width
+              min-width="290px"
+            >
+              <v-text-field
+                v-model="formSignUp.birthday"
+                readonly
+                placeholder="Birthday"
+              ></v-text-field>
+              <v-date-picker v-model="formSignUp.birthday" no-title scrollable>
                 <v-btn
-                  type="submit"
-                  @click="newAccount()"
-                  color="white--text"
-                  :disabled="!verifyFormErrorsSignUp"
+                  text
+                  color="primary"
+                  @click="$refs.menu.save(formSignUp.birthday)"
+                  >OK</v-btn
                 >
-                  Creeaza cont nou
-                </v-btn>
-              </v-card-actions>
-              <v-alert :value="true" type="error" v-if="errorSignUp !== null">
-                {{ errorSignUp }}
-              </v-alert>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
+              </v-date-picker>
+            </v-menu>
+            <v-select
+              :items="gender"
+              placeholder="Gender"
+              required
+              v-model="formSignUp.sex"
+            ></v-select>
+            <v-text-field
+              v-model="formSignUp.email2"
+              required
+              placeholder="Email address"
+            >
+              Email
+            </v-text-field>
+            <v-text-field
+              v-model="formSignUp.phone"
+              required
+              placeholder="Phone"
+            >
+              Phone
+            </v-text-field>
+            <v-switch
+              v-model="formSignUp.switch"
+              :label="
+                formSignUp.switch
+                  ? 'Register as photographer'
+                  : 'Register as a customer'
+              "
+            ></v-switch>
+            <v-text-field
+              v-model="formSignUp.password2"
+              required
+              :append-icon="show1 ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="show1 ? 'text' : 'password'"
+              @click:append="show1 = !show1"
+              placeholder="Password"
+            >
+              Password
+            </v-text-field>
+            <v-text-field
+              v-model="formSignUp.passwordConfirm"
+              required
+              :append-icon="show2 ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="show2 ? 'text' : 'password'"
+              @click:append="show2 = !show2"
+              :rules="[comparePasswords]"
+              placeholder="Retype your password"
+            >
+              Retype your password
+            </v-text-field>
+            <v-checkbox
+              label="Acceptance of personal data processing"
+              v-model="formSignUp.gdpr"
+              required
+            >
+            </v-checkbox>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              type="submit"
+              @click="newAccount()"
+              :disabled="!verifyFormErrorsSignUp"
+            >
+              Register account
+            </v-btn>
+          </v-card-actions>
+          <v-alert :value="true" type="error" v-if="errorSignUp !== null">
+            {{ errorSignUp }}
+          </v-alert>
+        </v-col>
+      </v-row>
     </v-dialog>
   </v-app>
 </template>
@@ -332,7 +338,7 @@ export default {
         this.formSignUp.sex !== null &&
         this.formSignUp.birthday !== null &&
         this.formSignUp.password2.length > 3 &&
-        this.comparePasswords !== "Parolele nu coincid"
+        this.comparePasswords !== "Passwords do not match"
       );
     },
     error() {
@@ -340,15 +346,19 @@ export default {
     },
     comparePasswords() {
       return this.formSignUp.password2 !== this.formSignUp.passwordConfirm
-        ? "Parolele nu coincid"
+        ? "Passwords do not match"
         : false;
     },
   },
   // functii ce se apeleaza la cerere
   methods: {
     goToRegister() {
-      this.dialogSignUp = true
-      this.dialogLogIn = false
+      this.dialogSignUp = true;
+      this.dialogLogIn = false;
+    },
+    goToLogin() {
+      this.dialogLogIn = true;
+      this.dialogSignUp = false;
     },
     userSign(email, password) {
       if (this.formSignIn.switch === true) {
@@ -524,12 +534,18 @@ export default {
 }
 .container-style {
   padding: 0px;
- background-color: var(--white);
- overflow: hidden;
+  background-color: var(--white);
+  overflow: hidden;
 }
 .register-btn {
   position: absolute;
   bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.to-login-btn {
+  position: absolute;
+  bottom: 30px;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -544,16 +560,32 @@ export default {
   letter-spacing: 0.2rem;
   overflow: hidden;
 }
+.register-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10%;
+  margin-bottom: 10px;
+  color: var(--blue-grotto);
+  margin-left: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  overflow: hidden;
+}
 .img-container {
   position: relative;
   text-align: center;
-  color: white;   overflow: hidden;
+  color: white;
+  overflow: hidden;
 }
 .actions-style {
-  margin-top: 8%
+  margin-top: 8%;
 }
 .forgot-psw-btn {
   background-color: transparent !important;
   box-shadow: none;
+}
+.field-style {
+  margin-top: 0px;
+  padding-top: 0px;
 }
 </style>
