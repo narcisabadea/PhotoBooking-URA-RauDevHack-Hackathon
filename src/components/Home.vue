@@ -1,167 +1,131 @@
 <template>
-  <v-container grid-list-xl align-content-center>
-    <v-layout align-center row wrap v-bind="binding">
-      <v-flex xs12 d-flex>
-        <v-chip color="#ffd200" text-color="white">
-          <v-icon left>star</v-icon>
-          <h3>Prezentare</h3>
-          <v-icon right>star</v-icon>
-        </v-chip>
+  <div>
+    <div class="container">
+      <v-img
+        src="../assets/background.png"
+        cover
+        style="width:100vw; height: 70vh;"
+      ></v-img>
+      <div class="centered" style="color: var(--white);">
+        <div id="columnChart" style="height: 100px;"></div>
+        Choosing a photographer is a challenge for many, due to the large number
+        of people who can provide such services. The
+        <span style="font-weight: bold;"
+          ><span style="color: var(--yellow);">PHOTO</span>Booking</span
+        >
+        application aims to simplify this process, by choosing the most suitable
+        artists, according to the client's selection criteria.
+
+        <p style="font-size: small;font-weight: 200;">
+          This app is created using Vue, Vuetify, Firebase and GitHub.
+        </p>
+      </div>
+    </div>
+    <v-container align-content-center class="authors">
+      <v-flex xs2 sm2 md2 xl2 lg2 ma-3>
+        <v-img src="https://avatars0.githubusercontent.com/u/28501996"></v-img>
+        <strong>Gheorghe Madalina Eleonora</strong>
       </v-flex>
-      <v-flex>
-        <h2>
-          <p>
-            Alegerea unui fotograf reprezinta o provocare pentru multi, datorita
-            numarului foarte mare de persoane ce pot presta astfel de servicii.
-            Aplicatia PhotoPreferencesMapper (PPM) are ca rol simplificarea
-            acestui proces, prin alegerea celor mai potriviti artisti, in
-            functie de criteriile de selectie ale clientului.
-          </p>
-        </h2>
+      <v-flex xs2 sm2 md2 xl2 lg2 ma-3>
+        <v-img src="https://avatars0.githubusercontent.com/u/36141252"></v-img>
+        <strong>Stalinescu Adrian</strong>
       </v-flex>
-      <v-flex>
-        <v-chip color="orange" text-color="white">
-          <h3>Despre noi</h3>
-        </v-chip>
+      <v-flex xs2 sm2 md2 xl2 lg2 ma-3>
+        <v-img src="https://avatars0.githubusercontent.com/u/16782460"></v-img>
+        <strong>Jora Stefan Danut</strong>
       </v-flex>
-      <v-flex>
-        <h2>
-          <p>Echipa samURAi</p>
-        </h2>
+      <v-flex xs2 sm2 md2 xl2 lg2 ma-3>
+        <v-img src="https://avatars0.githubusercontent.com/u/30498113"></v-img>
+        <strong
+          >Badea Narcisa
+          <div style="font-size: small;font-weight: 200;">
+            (our redesign helper)
+          </div></strong
+        >
       </v-flex>
-      <v-container fluid grid-list-xl align-content-center>
-        <v-layout align-items-center>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://avatars0.githubusercontent.com/u/28501996"
-              width="150px"
-              height="200px"
-            ></v-img>
-            <strong><p>Gheorghe Madalina Eleonora</p></strong>
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://www.inoveo.ro/wp-content/uploads/2019/03/INOVEO-ECHIPA-ADRIAN.jpg"
-              width="150px"
-              height="200px"
-            ></v-img>
-            <strong><p>Stalinescu Adrian</p></strong>
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://avatars3.githubusercontent.com/u/16782460"
-              width="150px"
-              height="200px"
-            ></v-img>
-            <strong><p>Jora Stefan Danut</p></strong>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <v-flex>
-        <v-chip color="orange" text-color="white">
-          <h3>Tehnologii Utilizate</h3>
-        </v-chip>
-      </v-flex>
-      <v-container fluid grid-list-xl align-content-center>
-        <v-layout align-items-center>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://vuejs.org/images/logo.png"
-              width="200px"
-              height="200px"
-            ></v-img>
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://img.icons8.com/color/420/firebase.png"
-              width="200px"
-              height="200px"
-            ></v-img>
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://logoeps.com/wp-content/uploads/2014/02/25231-github-cat-in-a-circle-icon-vector-icon-vector-eps.png"
-              width="200px"
-              height="200px"
-            ></v-img>
-          </v-flex>
-          <v-spacer></v-spacer>
-          <v-flex xs6 sm4>
-            <v-img
-              src="https://vuetifyjs.com/apple-touch-icon-180x180.png"
-              width="200px"
-              height="200px"
-            ></v-img>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <!-- <v-flex xs12>
-        <v-card>
-          <v-card-title>
-            Numar total de poze pe categorii
-          </v-card-title>
-          <v-card-text>
-            <div id="piechart1" style="width: 600px; height: 300px;"></div>
-          </v-card-text>
-        </v-card>
-      </v-flex> -->
-    </v-layout>
-  </v-container>
+    </v-container>
+  </div>
 </template>
 
 <script>
 export default {
   data: () => ({}),
   computed: {
-    binding() {
-      const binding = {};
-
-      if (this.$vuetify.breakpoint.mdAndUp) binding.column = true;
-
-      return binding;
+    arrayOfPortofolios(){
+      return this.$store.getters.arrayPortofolios
     },
-    // arrayOfPortofolios(){
-    //   return this.$store.getters.arrayPortofolios
-    // },
-    // numarPozeCategorii() {
-    //   let tags = {};
-    //   this.arrayOfPortofolios.forEach((item) => {
-    //     tags[item.tag] = (tags[item.tag] || 0) + 1;
-    //   });
-    //   return tags;
-    // },
+    numarPozeCategorii() {
+      let tags = {};
+      this.arrayOfPortofolios.forEach((item) => {
+        tags[item.tag] = (tags[item.tag] || 0) + 1;
+      });
+      return tags;
+    },
+  },
+  methods: {
+    drawChart() {
+       var chart1 = this.numarPozeCategorii["botez"];
+    var chart2 = this.numarPozeCategorii["nunta"];
+    var chart3 = this.numarPozeCategorii["produse"];
+    var chart4 = this.numarPozeCategorii["evenimente"];
+    var chart5 = this.numarPozeCategorii["locatie"];
+
+    var data = window.google.visualization.arrayToDataTable([
+      ["Type", "", { role: 'style' }],
+      ["Baby showers", chart1, '#ffd53d'],
+      ["Wedding", chart2, '#40b0df'],
+      ["Products", chart3, '#0067b3'],
+      ["Events", chart4, '#0000a3'],
+      ["Locations", chart5, 'rgba(17, 23, 29, 0.6)'],
+    ]);
+
+    var chart = new window.google.visualization.ColumnChart(
+      document.getElementById('columnChart'));
+
+    chart.draw(data, {legend: { position: "none" }});
+    }
   },
   mounted() {
-    // var chart1 = this.numarPozeCategorii["botez"];
-    // var chart2 = this.numarPozeCategorii["nunta"];
-    // var chart3 = this.numarPozeCategorii["produse"];
-    // var chart4 = this.numarPozeCategorii["evenimente"];
-    // var chart5 = this.numarPozeCategorii["locatie"];
-    // window.google.charts.load("current", { packages: ["corechart"] });
-    // window.google.charts.setOnLoadCallback(drawChart);
-    // function drawChart() {
-    //   var data = window.google.visualization.arrayToDataTable([
-    //     ["Tip", "Numar"],
-    //     ["Botez", chart1],
-    //     ["Nunta", chart2],
-    //     ["Produse", chart3],
-    //     ["Evenimente", chart4],
-    //     ["Locatii", chart5],
-    //   ]);
-    //   var options = {
-    //     title: "Poze per categorii",
-    //   };
-    //   var chart = new window.google.visualization.PieChart(
-    //     document.getElementById("piechart1")
-    //   );
-    //   chart.draw(data, options);
-    // }
+    window.google.charts.load('current', {packages: ['corechart', 'bar']});
+window.google.charts.setOnLoadCallback(this.drawChart);
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.container {
+  position: relative;
+  text-align: center;
+  padding: 0;
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  line-height: 2.2rem;
+  font-size: larger;
+  transform: translate(-50%, -50%);
+}
+.authors {
+  display: flex;
+  flex-flow: wrap;
+}
+@media (min-width: 960px) {
+  .container {
+    max-width: unset;
+  }
+}
+.authors {
+  justify-content: space-evenly;
+}
+.authors strong {
+  color: var(--blue-grotto);
+  font-size: small;
+}
+.authors img {
+  filter: grayscale(1);
+}
+.authors:hover {
+  filter: none;
+}
+</style>
