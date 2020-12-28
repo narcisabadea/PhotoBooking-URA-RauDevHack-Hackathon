@@ -35,22 +35,22 @@
         <v-list>
           <div v-if="user && user.type === 'client'">
             <router-link to="/ProfilClient" style="cursor:pointer">
-              <div class='menu-list'>Detalii</div>
+              <div class='menu-list'>Details</div>
             </router-link>
           </div>
           <div v-if="user && user.type === 'photo'">
             <router-link to="/ProfilFotograf" style="cursor:pointer">
-              <div class='menu-list'>Detalii</div>
+              <div class='menu-list'>Details</div>
             </router-link>
           </div>
           <div v-if="user && user.type === 'client'">
             <router-link to="/CereriTrimise" style="cursor:pointer">
-              <div class='menu-list'>Cereri</div>
+              <div class='menu-list'>Requests</div>
             </router-link>
           </div>
           <div v-if="user && user.type === 'photo'">
             <router-link to="/CereriAcceptDecline" style="cursor:pointer">
-              <div class='menu-list'>Cereri</div>
+              <div class='menu-list'>Requests</div>
             </router-link>
           </div>
         </v-list>
