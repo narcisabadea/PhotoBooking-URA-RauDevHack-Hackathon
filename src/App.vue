@@ -35,22 +35,22 @@
         <v-list>
           <div v-if="user && user.type === 'client'">
             <router-link to="/ProfilClient" style="cursor:pointer">
-              <div>Detalii cont</div>
+              <div class='menu-list'>Detalii</div>
             </router-link>
           </div>
           <div v-if="user && user.type === 'photo'">
             <router-link to="/ProfilFotograf" style="cursor:pointer">
-              <div>Detalii cont</div>
+              <div class='menu-list'>Detalii</div>
             </router-link>
           </div>
           <div v-if="user && user.type === 'client'">
             <router-link to="/CereriTrimise" style="cursor:pointer">
-              <div>Cereri trimise</div>
+              <div class='menu-list'>Cereri</div>
             </router-link>
           </div>
           <div v-if="user && user.type === 'photo'">
             <router-link to="/CereriAcceptDecline" style="cursor:pointer">
-              <div>Cereri</div>
+              <div class='menu-list'>Cereri</div>
             </router-link>
           </div>
         </v-list>
@@ -571,5 +571,8 @@ export default {
 .field-style {
   margin-top: 0px;
   padding-top: 0px;
+}
+.menu-list {
+padding: 5px 8px 8px 5px
 }
 </style>
