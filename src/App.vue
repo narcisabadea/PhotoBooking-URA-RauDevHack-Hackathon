@@ -22,10 +22,10 @@
       <v-btn @click="dialogSignUp = !dialogSignUp" v-if="!logout">
         Sign up
       </v-btn>
-      <v-btn router to="/Test" v-if="user">
+      <v-btn router to="/Test" v-if="user && user.id">
         Test
       </v-btn>
-      <v-menu offset-y v-if="user">
+      <v-menu offset-y v-if="user && user.id">
         <template v-slot:activator="{ attrs, on }">
           <v-btn v-bind="attrs" v-on="on">
             <div>Cont</div>
@@ -108,6 +108,14 @@
               "
             >
             </v-switch>
+            <v-alert
+              :value="true"
+              type="error"
+              v-if="errorLogin !== null"
+              style="margin-bottom: 0px"
+            >
+              {{ errorLogin }}
+            </v-alert>
           </v-card-text>
 
           <v-card-actions class="actions-style">
@@ -129,9 +137,6 @@
           </v-card-actions>
         </v-col>
       </v-row>
-      <v-alert :value="true" type="error" v-if="errorLogin !== null">
-        {{ errorLogin }}
-      </v-alert>
     </v-dialog>
 
     <v-dialog v-model="dialogSignUp" max-width="60%" scrollable>
@@ -281,7 +286,6 @@ export default {
       errorLogin: null,
       errorSignUp: null,
       rules: null,
-      errorLogin: null,
     };
   },
   // functii ce se apeleaza de fiecare data cand o valoare din interior se modifica. Numele functiei se poate utiliza si pe post de variabila daca aceasta 'return'-eaza
@@ -305,7 +309,6 @@ export default {
       );
     },
     verifyFormErrorsSignUp() {
-      console.log(this.formSignUp);
       return (
         this.formSignUp.password2.length > 3 &&
         /.+@.+/.test(this.formSignUp.email2) &&
@@ -348,8 +351,11 @@ export default {
               id: element.idFotograf,
             });
             this.dialogLogIn = false;
+            this.formSignIn.email = "";
+            this.formSignIn.password = "";
+            this.errorLogin = null;
           } else {
-            this.errorLogin = "Date invalide";
+            this.errorLogin = "Invalid email or password";
           }
         });
       } else {
@@ -364,8 +370,11 @@ export default {
               id: element.idClient,
             });
             this.dialogLogIn = false;
+            this.formSignIn.email = "";
+            this.formSignIn.password = "";
+            this.errorLogin = null;
           } else {
-            this.errorLogin = "Date invalide";
+            this.errorLogin = "Invalid email or password";
           }
         });
       }
