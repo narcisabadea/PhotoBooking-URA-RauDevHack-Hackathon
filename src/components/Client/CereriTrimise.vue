@@ -9,7 +9,10 @@
                 Client
               </th>
               <th class="text-left">
-                Period
+                Period start
+              </th>
+              <th class="text-left">
+                Period end
               </th>
               <th class="text-left">
                 Status
