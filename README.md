@@ -1,6 +1,6 @@
 # PhotoBooking App for URA Hackathon 2019
 
-PhotoBooking App that recommends a suitable photographer for a customer's event, according to their visual preferences, budget and period.
+PhotoBooking App that recommends a suitable photographer for a customer's event, according to his visual preferences, budget and period.
 Application created using Vue.js, Vuetify, Vuex, Firebase.
 
 ## Development
