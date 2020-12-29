@@ -16,6 +16,7 @@ To run the project on your machine use npm run serve for a dev server. Navigate 
 * Customers can take a test so that the app can recommend the best photographer for their event, according to their visual preferences, budget and period
 * Users can access their profile (as customer or photographer) where they can change their details
 * Both types of users cand see a list of their requests and status 
+* Informations are saved through Firebase
 
 ## Screenshots
 * Homepage
